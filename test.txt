@@ -1,13 +1,10 @@
-zzzz    zzzz
- zzzz  zzzz
-  zzzzzzzz
- zzzz  zzzz
-zzzz    zzzz
-
-zzzz    zzzz
- zzzz  zzzz
-  zzzzzzzz
-  zzzzzzzz
- zzzz  zzzz
-zzzz    zzzz
-
+printf("zzzzzzzz        zzzzzzzz\n");
+printf(" zzzzzzzz      zzzzzzzz \n");
+printf("  zzzzzzzz    zzzzzzzz  \n");
+printf("   zzzzzzzz  zzzzzzzz   \n");
+printf("    zzzzzzzzzzzzzzzz    \n");
+printf("    zzzzzzzzzzzzzzzz    \n");
+printf("   zzzzzzzz  zzzzzzzz   \n");
+printf("  zzzzzzzz    zzzzzzzz  \n");
+printf(" zzzzzzzz      zzzzzzzz \n");
+printf("zzzzzzzz        zzzzzzzz\n");
