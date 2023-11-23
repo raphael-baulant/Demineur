@@ -23,6 +23,11 @@ typedef struct {
     int j;
 } Position;
 
+typedef struct {
+    Position position;
+    char action;
+} Choice;
+
 Cell** allocateGrid() {
     Cell** grid;
     grid = (Cell**)malloc(HEIGHT * sizeof(Cell*));
@@ -83,21 +88,48 @@ void displayGrid(Cell** grid) {
             if (grid[i][j].state == OUT) {
                 printf(" ");
             }
-            if (grid[i][j].state == HIDDEN && !grid[i][j].mine) {
-                printf("Z");
+            if (grid[i][j].state == HIDDEN) {
+                if (!grid[i][j].mine) {
+                    printf("Z");
+                } else {
+                    printf("M");
+                }
             }
             if (grid[i][j].state == REVEALED) {
-                printf("1");
+                if (!grid[i][j].mine) {
+                    printf("1");
+                } else {
+                    printf("M");
+                }
             }
             if (grid[i][j].state == FLAGGED) {
-                printf("X");
-            }
-            if (grid[i][j].state == HIDDEN && grid[i][j].mine) {
-                printf("M");
+                printf("F");
             }
         }
         printf("\n");
     }
+}
+
+Choice choose(Cell** grid) {
+    Position position;
+    char action;
+    bool out, invalidAction;
+    printf("Entrez une position (i,j) et une action C (C = (R)eveal, (S)et, (U)nset).\n");
+    printf("Format du choix : i j C\n");
+    do {
+        printf("Choix : ");
+        scanf("%d %d %c", &position.i, &position.j, &action);
+        out = (position.i < 0 || position.j < 0 || position.i >= HEIGHT || position.j >= WIDTH) || (grid[position.i][position.j].state == OUT);
+        if (out) {
+            printf("Position choisie invalide !\n");
+        }
+        invalidAction = (action != 'R' && action != 'S' && action != 'U');
+        if (invalidAction) {
+            printf("Action choisie invalide !\n");
+        }
+    } while (out || invalidAction);
+    Choice choice = {position , action};
+    return choice;
 }
 
 int main() {
@@ -106,11 +138,13 @@ int main() {
 
     Cell** grid = allocateGrid();
     initialiseGrid(grid, mines);
-
     displayGrid(grid);
 
+    Choice choice = choose(grid);
+
     //debbug avec print
-    printf("%d", mines);
+    printf("Choix : %d %d %c\n", choice.position.i, choice.position.j, choice.action);
+    printf("Mines : %d\n", mines);
 
     freeGrid(grid);
     return 0;
