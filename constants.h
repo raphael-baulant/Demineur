@@ -1,9 +1,9 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#define HEIGHT 5
+#define HEIGHT 5 // HEIGHT > 2
 
-//X est le nombre de Z en largeur nécessaire pour une barre du X
+// X est le nombre de Z en largeur nécessaire pour une barre du X
 #if HEIGHT % 2
 #define X (HEIGHT - 1)
 #else

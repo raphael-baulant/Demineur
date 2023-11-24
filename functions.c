@@ -38,6 +38,7 @@ void initialiseGrid(Cell** grid) {
             }
         }
     }
+    // Placement des mines
     int mines = (int)(PROBA * Z + 0.5);
     int count = 0;
     while (count < mines) {
@@ -86,10 +87,10 @@ void displayGrid(Cell** grid) {
             }
             if (grid[i][j].state == HIDDEN) {
                 if (!grid[i][j].mine) {
-                    //printf("Z");
-                    printf("%d", grid[i][j].adjacentMines);
+                    printf("Z");
+                    //printf("%d", grid[i][j].adjacentMines);
                 } else {
-                    printf("M");
+                    printf("M"); // Debbug
                 }
             }
             if (grid[i][j].state == REVEALED) {
@@ -107,24 +108,72 @@ void displayGrid(Cell** grid) {
     }
 }
 
-Choice choose(Cell** grid) {
+Choice makeChoice(Cell** grid) {
     Position position;
     char action;
-    bool out, invalidAction;
-    printf("Entrez une position (i,j) et une action C (C = (R)eveal, (S)et, (U)nset).\n");
-    printf("Format du choix : i j C\n");
+    bool isOut, isInvalidAction, isAlreadyRevealed, isAlreadyFlagged, isAlreadyUnflagged;
     do {
         printf("Choix : ");
         scanf("%d %d %c", &position.i, &position.j, &action);
-        out = (position.i < 0 || position.j < 0 || position.i >= HEIGHT || position.j >= WIDTH) || (grid[position.i][position.j].state == OUT);
-        if (out) {
-            printf("Position choisie invalide !\n");
+        isOut = (position.i < 0 || position.j < 0 || position.i >= HEIGHT || position.j >= WIDTH) || (grid[position.i][position.j].state == OUT);
+        isInvalidAction = (action != 'R' && action != 'S' && action != 'U');
+        if (isOut || isInvalidAction) {
+            if (isOut) {
+                printf("Position choisie en dehors du X !\n");
+            }
+            if (isInvalidAction) {
+                printf("Action choisie invalide !\n");
+            }
+        } else {
+            isAlreadyRevealed = (grid[position.i][position.j].state == REVEALED);
+            if (isAlreadyRevealed) {
+                printf("Position choisie déjà révélée !\n");
+            } else {
+                bool isFlagged = (grid[position.i][position.j].state == FLAGGED);
+                isAlreadyFlagged = (isFlagged && action == 'S');
+                isAlreadyUnflagged = (!isFlagged && action == 'U');
+                if (isAlreadyFlagged) {
+                    printf("Position choisie déjà marquée !\n");
+                }
+                if (isAlreadyUnflagged) {
+                    printf("Position choisie déjà non marquée !\n");
+                }
+            }
         }
-        invalidAction = (action != 'R' && action != 'S' && action != 'U');
-        if (invalidAction) {
-            printf("Action choisie invalide !\n");
-        }
-    } while (out || invalidAction);
+    } while (isOut || isInvalidAction || isAlreadyRevealed || isAlreadyFlagged || isAlreadyUnflagged);
     Choice choice = {position , action};
     return choice;
+}
+
+void executeAction(Choice choice, Cell** grid, int *unminedRevealedCells) {
+    if (choice.action == 'S') {
+        grid[choice.position.i][choice.position.j].state = FLAGGED;
+    }
+    if (choice.action == 'U') {
+        grid[choice.position.i][choice.position.j].state = HIDDEN;
+    }
+    if (choice.action == 'R') {
+        grid[choice.position.i][choice.position.j].state = REVEALED;
+        bool isMine = grid[choice.position.i][choice.position.j].mine;
+        if (!isMine) {
+            (*unminedRevealedCells)++;
+            if (grid[choice.position.i][choice.position.j].adjacentMines == 0) {
+                revealChain(choice.position, grid, unminedRevealedCells);
+            }
+        }
+    }
+}
+
+void revealChain(Position position, Cell** grid, int *unminedRevealedCells) {
+    Neighbours neighbours = getNeighbours(position, grid);
+    for (int k = 0; k < neighbours.number; k++) {
+        if (grid[neighbours.positions[k].i][neighbours.positions[k].j].state == HIDDEN) {
+            grid[neighbours.positions[k].i][neighbours.positions[k].j].state = REVEALED;
+            (*unminedRevealedCells)++;
+            if (grid[neighbours.positions[k].i][neighbours.positions[k].j].adjacentMines == 0) {
+                revealChain(neighbours.positions[k], grid, unminedRevealedCells);
+            }
+        }
+    }
+    free(neighbours.positions);
 }

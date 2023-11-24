@@ -16,7 +16,13 @@ void initialiseGrid(Cell** grid);
 void displayGrid(Cell** grid);
 
 // Retourne le choix du joueur
-Choice choose(Cell** grid);
+Choice makeChoice(Cell** grid);
+
+// Exécute l'action du joueur
+void executeAction(Choice choice, Cell** grid, int *unminedRevealedCells);
+
+// Révèle en chaîne les cases s'il n'y a pas de mine voisine
+void revealChain(Position position, Cell** grid, int *unminedRevealedCells);
 
 // Retourne les positions des cellules voisines (dans la forme X)
 Neighbours getNeighbours(Position position, Cell** grid);
