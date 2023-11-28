@@ -113,30 +113,30 @@ Choice makeChoice(Cell** grid) {
     char action;
     bool isOut, isInvalidAction, isAlreadyRevealed, isAlreadyFlagged, isAlreadyUnflagged;
     do {
-        printf("Choix : ");
+        printf("\n[+] choice (i j C) : ");
         scanf("%d %d %c", &position.i, &position.j, &action);
         isOut = (position.i < 0 || position.j < 0 || position.i >= HEIGHT || position.j >= WIDTH) || (grid[position.i][position.j].state == OUT);
         isInvalidAction = (action != 'R' && action != 'S' && action != 'U');
         if (isOut || isInvalidAction) {
             if (isOut) {
-                printf("Position choisie en dehors du X !\n");
+                printf("\n[Error] position is outside of the gameboard (X).\n");
             }
             if (isInvalidAction) {
-                printf("Action choisie invalide !\n");
+                printf("\n[Error] Invalid action.\n");
             }
         } else {
             isAlreadyRevealed = (grid[position.i][position.j].state == REVEALED);
             if (isAlreadyRevealed) {
-                printf("Position choisie déjà révélée !\n");
+                printf("\n[Error] position already revealed.\n");
             } else {
                 bool isFlagged = (grid[position.i][position.j].state == FLAGGED);
                 isAlreadyFlagged = (isFlagged && action == 'S');
                 isAlreadyUnflagged = (!isFlagged && action == 'U');
                 if (isAlreadyFlagged) {
-                    printf("Position choisie déjà marquée !\n");
+                    printf("\n[Error] position already set (flagged).\n");
                 }
                 if (isAlreadyUnflagged) {
-                    printf("Position choisie déjà non marquée !\n");
+                    printf("\n[Error] position already unset (unflagged).\n");
                 }
             }
         }
@@ -195,7 +195,7 @@ void printBanner(){
     while (fgets(ligne, sizeof(ligne), fichier) != NULL) {
         printf("%s", ligne);
     }
-    printf("\n\n                          [+] Press \"Enter\" to start playing.\n");
+    printf("\n\n                          [+] Press \"Enter\" to play.\n");
 
     // Fermer le fichier
     fclose(fichier);

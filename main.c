@@ -31,9 +31,10 @@ int main() {
     int remainingMines = mines;
     
     do {
-        printf("A choice is a position (i,j) and an action C.\n(C = (R)eveal, (S)et, (U)nset).\n\n");
-        printf("[+] Choice format : i j C\n\n");
-        printf("[info] Remaining mines : %d\n\n", remainingMines);
+        printf("[Reminder] A choice is a position (i,j) and an action C.\n");
+        printf("          (C = (R)eveal, (S)et, (U)nset).\n\n");
+        printf("[Info] Remaining mines : %d\n", remainingMines);
+        printf("[Info] Timer : 00:00:00 (TODO)\n\n");
         displayGrid(grid);
         Choice choice = makeChoice(grid);
         executeAction(choice, grid, &unminedRevealedCells);
