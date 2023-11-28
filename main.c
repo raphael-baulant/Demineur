@@ -7,10 +7,17 @@
 #include "functions.h"
 
 int main() {
+    system("clear"); // Efface le terminal
+
     if (HEIGHT < 3) {
-        printf("La hauteur doit être strictement supérieure à 2 !");
+        printf("[ERROR] The height parameter must be at least 2. Please correct it in constants.h file.");
         return 0;
     }
+
+    // Affichage de la bannière + choix (Jouer/Scoreboard/Paramètres)?
+    printBanner();
+    getchar();
+    system("clear"); // Efface le terminal (pour "rafraichir")
     
     srand((unsigned int)time(NULL));
     Cell** grid = allocateGrid();
@@ -22,10 +29,11 @@ int main() {
     int maxUnminedRevealedCells = Z - mines;
     int unminedRevealedCells = 0;
     int remainingMines = mines;
-    printf("Un choix est une position (i,j) et une action C (C = (R)eveal, (S)et, (U)nset).\n");
-    printf("Format du choix : i j C\n");
+    
     do {
-        printf("Mines : %d\n", remainingMines);
+        printf("A choice is a position (i,j) and an action C.\n(C = (R)eveal, (S)et, (U)nset).\n\n");
+        printf("[+] Choice format : i j C\n\n");
+        printf("[info] Remaining mines : %d\n\n", remainingMines);
         displayGrid(grid);
         Choice choice = makeChoice(grid);
         executeAction(choice, grid, &unminedRevealedCells);
@@ -41,12 +49,13 @@ int main() {
         if (unminedRevealedCells == maxUnminedRevealedCells) {
             hasWon = true;
         }
+        system("clear");
     } while(!hasLost && !hasWon);
 
     if (hasWon) {
-        printf("Vous avez gagné !");
+        printWin();
     } else {
-        printf("Vous avez perdu !");
+        printLose();
     }
 
     freeGrid(grid);

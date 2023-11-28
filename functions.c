@@ -177,3 +177,72 @@ void revealChain(Position position, Cell** grid, int *unminedRevealedCells) {
     }
     free(neighbours.positions);
 }
+
+void printBanner(){
+    const char *bannerFile = "banner.txt";
+
+    // Ouvrir le fichier en mode lecture
+    FILE *fichier = fopen(bannerFile, "r");
+
+    // Vérifier si l'ouverture du fichier a réussi
+    if (fichier == NULL) {
+        fprintf(stderr, "Impossible d'ouvrir le fichier %s\n", bannerFile);
+        exit;  // Quitter le programme avec un code d'erreur
+    }
+
+    // Lire et afficher le contenu du fichier ligne par ligne
+    char ligne[100];  // Choisir une taille appropriée pour la ligne
+    while (fgets(ligne, sizeof(ligne), fichier) != NULL) {
+        printf("%s", ligne);
+    }
+    printf("\n\n                          [+] Press \"Enter\" to start playing.\n");
+
+    // Fermer le fichier
+    fclose(fichier);
+}
+
+void printWin(){
+    const char *bannerFile = "win.txt";
+
+    // Ouvrir le fichier en mode lecture
+    FILE *fichier = fopen(bannerFile, "r");
+
+    // Vérifier si l'ouverture du fichier a réussi
+    if (fichier == NULL) {
+        fprintf(stderr, "Impossible d'ouvrir le fichier %s\n", bannerFile);
+        exit;  // Quitter le programme avec un code d'erreur
+    }
+
+    // Lire et afficher le contenu du fichier ligne par ligne
+    char ligne[100];  // Choisir une taille appropriée pour la ligne
+    while (fgets(ligne, sizeof(ligne), fichier) != NULL) {
+        printf("%s", ligne);
+    }
+    printf("\n\n                   [+] You win in 00:00:00 (add time)\n");
+
+    // Fermer le fichier
+    fclose(fichier);
+}
+
+void printLose(){
+    const char *bannerFile = "lose.txt";
+
+    // Ouvrir le fichier en mode lecture
+    FILE *fichier = fopen(bannerFile, "r");
+
+    // Vérifier si l'ouverture du fichier a réussi
+    if (fichier == NULL) {
+        fprintf(stderr, "Impossible d'ouvrir le fichier %s\n", bannerFile);
+        exit;  // Quitter le programme avec un code d'erreur
+    }
+
+    // Lire et afficher le contenu du fichier ligne par ligne
+    char ligne[100];  // Choisir une taille appropriée pour la ligne
+    while (fgets(ligne, sizeof(ligne), fichier) != NULL) {
+        printf("%s", ligne);
+    }
+    printf("\n");
+
+    // Fermer le fichier
+    fclose(fichier);      
+}
