@@ -13,7 +13,7 @@ void freeGrid(Cell** grid);
 void initialiseGrid(Cell** grid);
 
 // Affiche la grille actuelle du démineur
-void displayGrid(Cell** grid);
+void displayGrid(Cell** grid, bool hasLost);
 
 // Retourne le choix du joueur
 Choice makeChoice(Cell** grid);
