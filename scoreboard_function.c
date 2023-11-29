@@ -8,6 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 // file to avoid conflict in functions.c and .h (add theses functions later in functions.c and .h)
+// ATTENTION A LA DIFFICULTEE !!!!
 
 // function to add new record in scoreboard file (after win)
 void addRecord(char* username, int seconds){

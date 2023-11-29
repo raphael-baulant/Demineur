@@ -276,5 +276,5 @@ void print_timer(int x) {
     h = x / 3600;
     m = (x % 3600) / 60;
     s = (x % 3600) % 60;
-    printf("[Info] Timer : %02d:%02d:%02d\n", h,m,s);
+    printf("[Info] Timer : %02d:%02d:%02d\n\n", h,m,s);
 }

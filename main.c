@@ -30,16 +30,20 @@ int main() {
 
     bool hasLost = false;
     bool hasWon = false;
+    bool firstChoice = true;
     int mines = (int)(PROBA * Z + 0.5);
     int maxUnminedRevealedCells = Z - mines;
     int unminedRevealedCells = 0;
     int remainingMines = mines;
+
+    time_t timeFirstChoice, timeLastChoice;
+    int timer = 0; // seconds since the first action
     
     do {
         printf("[Reminder] A choice is a position (i,j) and an action C.\n");
         printf("          (C = (R)eveal, (S)et, (U)nset).\n\n");
         printf("[Info] Remaining mines : %d\n", remainingMines);
-        printf("[Info] Timer : 00:00:00 (TODO)\n\n");
+        print_timer(timer);
         displayGrid(grid);
         Choice choice = makeChoice(grid);
         executeAction(choice, grid, &unminedRevealedCells);
@@ -55,13 +59,26 @@ int main() {
         if (unminedRevealedCells == maxUnminedRevealedCells) {
             hasWon = true;
         }
+
+        if(firstChoice){
+            timeFirstChoice = time(NULL);
+            timeLastChoice = timeFirstChoice;
+            firstChoice = false;
+        }else{
+            timeLastChoice = time(NULL);
+            timer = timeLastChoice - timeFirstChoice;
+        }
         system("clear");
+        
     } while(!hasLost && !hasWon);
 
     if (hasWon) {
         printWin();
+        print_timer(timer);
+        // Ask the user to input his user name (record.txt);
     } else {
         printLose();
+        print_timer(timer);
     }
 
     freeGrid(grid);
