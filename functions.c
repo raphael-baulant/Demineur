@@ -239,9 +239,9 @@ void printBanner(char* bannerFile){
 
 void printMenu(){
     printBanner("banners/menu.txt");
-    printf("\n\n                          [0] Play\n");
-    printf("                          [1] Leaderboard\n");
-    printf("                          [2] Exit\n\n");
+    printf("\n\n                                [0] Play\n");
+    printf("                                [1] Leaderboard\n");
+    printf("                                [2] Exit\n\n");
 }   
 
 void printLeaderboard(){
