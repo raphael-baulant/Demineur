@@ -80,32 +80,48 @@ Neighbours getNeighbours(Position position, Cell** grid) {
 }
 
 void displayGrid(Cell** grid) {
+    // affichage des coordonnées en haut :
+    printf(" \u23F3\u2502");
+    for (int j = 0; j < WIDTH; j++){
+        printf("%02d \u2502", j);
+    }
     for (int i = 0; i < HEIGHT; i++) {
+        printf("\n");
+        //séparation de chaque ligne
+        for (int j = 0; j <= WIDTH; j++) {
+            printf("\u2500\u2500\u2500\u253C");
+        }
+        printf("\n%02d \u2502", i);
         for (int j = 0; j < WIDTH; j++) {
             if (grid[i][j].state == OUT) {
-                printf(" ");
+                printf("   \u2502");
             }
             if (grid[i][j].state == HIDDEN) {
                 if (!grid[i][j].mine) {
-                    printf("Z");
+                    printf(" Z \u2502");
                     //printf("%d", grid[i][j].adjacentMines);
                 } else {
-                    printf("M"); // Debbug
+                    printf(" M \u2502"); // Debbug
                 }
             }
+            // dans les printf: affichage sur 3 de large avec la séparation à la fin
             if (grid[i][j].state == REVEALED) {
                 if (!grid[i][j].mine) {
-                    printf("%d", grid[i][j].adjacentMines);
+                    printf(" %d \u2502", grid[i][j].adjacentMines);
                 } else {
-                    printf("M");
+                    printf(" M \u2502");
                 }
             }
             if (grid[i][j].state == FLAGGED) {
-                printf("F");
+                printf(" F \u2502");
             }
         }
-        printf("\n");
     }
+    printf("\n");
+    for (int j = 0; j <= WIDTH; j++) {
+            printf("\u2500\u2500\u2500\u2534");
+    }
+    printf("\n");
 }
 
 Choice makeChoice(Cell** grid) {
