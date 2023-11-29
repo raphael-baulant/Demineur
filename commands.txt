@@ -1,2 +1,3 @@
 gcc -o prog main.c functions.c
 ./prog
+//test
