@@ -271,18 +271,10 @@ void printLose(){
     fclose(fichier);      
 }
 
-void display_time() {
-    time_t start_time;
-    int seconds = 0;
-    // Commencement NULL
-    start_time = time(NULL);
-    while(1) {
-        seconds++;
-        // affichage du temps écoulé 
-        printf("\r%02d:%02d:%02d", seconds/3600, (seconds%3600)/60, seconds%60);
-        //Permets le bon affichage de notre chrono
-        fflush(stdout);
-        // Attendre 1 seconde pour l'affichage c'est là que se joue le chrono
-        sleep(1);
-    }
+void print_timer(int x) {
+    int h,m,s;
+    h = x / 3600;
+    m = (x % 3600) / 60;
+    s = (x % 3600) % 60;
+    printf("[Info] Timer : %02d:%02d:%02d\n", h,m,s);
 }
