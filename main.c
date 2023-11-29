@@ -5,6 +5,9 @@
 #include "structures.h"
 #include "constants.h"
 #include "functions.h"
+#include <time.h>
+#include <string.h>
+#include <unistd.h>
 
 int main() {
     system("clear"); // Efface le terminal
@@ -17,7 +20,8 @@ int main() {
     // Affichage de la bannière + choix (Jouer/Scoreboard/Paramètres)?
     printBanner();
     getchar();
-    system("clear"); // Efface le terminal (pour "rafraichir")
+    system("clear");
+    // Efface le terminal (pour "rafraichir")
     
     srand((unsigned int)time(NULL));
     Cell** grid = allocateGrid();
