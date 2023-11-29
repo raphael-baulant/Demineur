@@ -1,5 +1,5 @@
-raphael/02:59:59
-champion/00:05:00
-alexandre/00:45:00
-anthony/00:14:30
+raphael:15188552
+champion:300
+alexandre:8000
+anthony:7500
 
