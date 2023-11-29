@@ -18,11 +18,15 @@ int main() {
     }
 
     // Affichage de la bannière + choix (Jouer/Scoreboard/Paramètres)?
-    printTitle();
-    getchar();
-    system("clear");
-    // Efface le terminal (pour "rafraichir")
-
+    int menuChoice;
+    bool menu = true;
+    while(menu){
+        printMenu();
+        scanf("%d",&menuChoice);
+        if(menuChoice == 0 || menuChoice == 1)
+            menu = false;
+        system("clear"); // Efface le terminal (pour "rafraichir")
+    }
     
     srand((unsigned int)time(NULL));
     Cell** grid = allocateGrid();
