@@ -1,0 +1,5 @@
+raphael:15188552
+champion:300
+alexandre:8000
+anthony:7500
+

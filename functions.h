@@ -28,7 +28,7 @@ void revealChain(Position position, Cell** grid, int *unminedRevealedCells);
 Neighbours getNeighbours(Position position, Cell** grid);
 
 // Affiche la bannière de début du jeu (Matheo)
-void printBanner();
+void printTitle();
 
 // Affiche le message de victoire (ajouter le temps?)
 void printWin();

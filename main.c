@@ -18,7 +18,7 @@ int main() {
     }
 
     // Affichage de la bannière + choix (Jouer/Scoreboard/Paramètres)?
-    printBanner();
+    printTitle();
     getchar();
     system("clear");
     // Efface le terminal (pour "rafraichir")

@@ -84,7 +84,7 @@ Neighbours getNeighbours(Position position, Cell** grid) {
 
 void displayGrid(Cell** grid) {
     // affichage des coordonnées en haut :
-    printf(" \u23F3\u2502");
+    printf("\u267F \u2502");
     for (int j = 0; j < WIDTH; j++){
         printf("%02d \u2502", j);
     }
@@ -97,14 +97,14 @@ void displayGrid(Cell** grid) {
         printf("\n%02d \u2502", i);
         for (int j = 0; j < WIDTH; j++) {
             if (grid[i][j].state == OUT) {
-                printf("   \u2502");
+                printf(" \u2591 \u2502");
             }
             if (grid[i][j].state == HIDDEN) {
                 if (!grid[i][j].mine) {
-                    printf(" Z \u2502");
+                    printf("   \u2502"); // \u2588
                     //printf("%d", grid[i][j].adjacentMines);
                 } else {
-                    printf(" M \u2502"); // Debbug
+                    printf(" \u25A2 \u2502"); // Debbug \u25A0
                 }
             }
             // dans les printf: affichage sur 3 de large avec la séparation à la fin
@@ -116,7 +116,7 @@ void displayGrid(Cell** grid) {
                 }
             }
             if (grid[i][j].state == FLAGGED) {
-                printf(" F \u2502");
+                printf(" \u2691 \u2502"); // \u2691
             }
         }
     }
@@ -130,10 +130,15 @@ void displayGrid(Cell** grid) {
 Choice makeChoice(Cell** grid) {
     Position position;
     char action;
-    bool isOut, isInvalidAction, isAlreadyRevealed, isAlreadyFlagged, isAlreadyUnflagged;
+    bool isArg, isOut, isInvalidAction, isAlreadyRevealed, isAlreadyFlagged, isAlreadyUnflagged;
     do {
         printf("\n[+] choice (i j C) : ");
-        scanf("%d %d %c", &position.i, &position.j, &action);
+        int argcount = scanf("%d %d %c", &position.i, &position.j, &action);
+        if(argcount == 3){
+            isArg = false;
+            break;
+        }
+        isArg = true;
         isOut = (position.i < 0 || position.j < 0 || position.i >= HEIGHT || position.j >= WIDTH) || (grid[position.i][position.j].state == OUT);
         isInvalidAction = (action != 'R' && action != 'S' && action != 'U');
         if (isOut || isInvalidAction) {
@@ -159,7 +164,7 @@ Choice makeChoice(Cell** grid) {
                 }
             }
         }
-    } while (isOut || isInvalidAction || isAlreadyRevealed || isAlreadyFlagged || isAlreadyUnflagged);
+    } while (!isArg || isOut || isInvalidAction || isAlreadyRevealed || isAlreadyFlagged || isAlreadyUnflagged);
     Choice choice = {position , action};
     return choice;
 }
@@ -197,8 +202,8 @@ void revealChain(Position position, Cell** grid, int *unminedRevealedCells) {
     free(neighbours.positions);
 }
 
-void printBanner(){
-    const char *bannerFile = "banner.txt";
+void printTitle(){
+    const char *bannerFile = "banners/title.txt";
 
     // Ouvrir le fichier en mode lecture
     FILE *fichier = fopen(bannerFile, "r");
@@ -221,7 +226,7 @@ void printBanner(){
 }
 
 void printWin(){
-    const char *bannerFile = "win.txt";
+    const char *bannerFile = "banners/win.txt";
 
     // Ouvrir le fichier en mode lecture
     FILE *fichier = fopen(bannerFile, "r");
@@ -244,7 +249,7 @@ void printWin(){
 }
 
 void printLose(){
-    const char *bannerFile = "lose.txt";
+    const char *bannerFile = "banners/lose.txt";
 
     // Ouvrir le fichier en mode lecture
     FILE *fichier = fopen(bannerFile, "r");
