@@ -43,13 +43,8 @@ int main() {
         printf("[Reminder] A choice is a position (i,j) and an action C.\n");
         printf("          (C = (R)eveal, (S)et, (U)nset).\n\n");
         printf("[Info] Remaining mines : %d\n", remainingMines);
-<<<<<<< HEAD
         print_timer(timer);
-        displayGrid(grid);
-=======
-        printf("[Info] Timer : 00:00:00 (TODO)\n\n");
-        displayGrid(grid, false);
->>>>>>> fbd51e884f303f11e2dda77762022907dce2dd1d
+        displayGrid(grid,false);
         Choice choice = makeChoice(grid);
         executeAction(choice, grid, &unminedRevealedCells);
         if (choice.action == 'S') {
@@ -83,11 +78,8 @@ int main() {
         // Ask the user to input his user name (record.txt);
     } else {
         printLose();
-<<<<<<< HEAD
         print_timer(timer);
-=======
         displayGrid(grid, true);
->>>>>>> fbd51e884f303f11e2dda77762022907dce2dd1d
     }
 
     freeGrid(grid);
