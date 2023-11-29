@@ -36,10 +36,17 @@ void printBanner(char* bannerFile);
 // Affiche la bannière de début du jeu (Matheo)
 void printMenu();
 
+// Affiche le leaderboard
+void printLeaderboard();
+
 // Affiche le message de victoire (ajouter le temps?)
 void printWin();
 
 // Affiche le message de défaite
 void printLose();
+
+// Ajouter une ligne dans le fichier des enregistrement des victoires
+void addRecord(char* username, int timer);
+
 
 #endif

@@ -240,15 +240,39 @@ void printBanner(char* bannerFile){
 void printMenu(){
     printBanner("banners/menu.txt");
     printf("\n\n                          [0] Play\n");
-    printf("                          [1] Leaderboard\n\n");
+    printf("                          [1] Leaderboard\n");
+    printf("                          [2] Exit\n\n");
 }   
+
+void printLeaderboard(){
+    printBanner("banners/leaderboard.txt");
+    printf("\n[Info] Difficulty : %d\n\n",HEIGHT);
+    // Ajouter l'affichage des 3 meilleurs joueurs (fonction printLeader() => fonction getLeader())
+    printf("[+] Press \"Enter\" for the menu\n");
+    sleep(3); // A SUPPRIMER 
+}
 
 void printWin(){
     printBanner("banners/win.txt");
-
 }
 
 void printLose(){
     printBanner("banners/lose.txt");
+}
+
+void addRecord(char* username, int timer){
+    const char *recordFile = "record.txt";
+
+    // Ouvrir le fichier en mode lecture
+    FILE *file = fopen(recordFile, "a");
+
+    if (file == NULL) {
+        fprintf(stderr, "Can't open file %s\n", recordFile);
+        exit;  // Quitter le programme avec un code d'erreur
+    }
+
+    fprintf(file, "%d:%s:%d\n", HEIGHT, username, timer);  // Écriture dans le fichier
+
+    fclose(file);  // Fermeture du fichier
 }
 
