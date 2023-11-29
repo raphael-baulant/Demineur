@@ -1,4 +1,4 @@
 gcc -o prog main.c functions.c
 ./prog
 //test
-//test 2
+//test 3
