@@ -202,8 +202,8 @@ void revealChain(Position position, Cell** grid, int *unminedRevealedCells) {
     free(neighbours.positions);
 }
 
-void printBanner(){
-    const char *bannerFile = "banner.txt";
+void printTitle(){
+    const char *bannerFile = "banners/title.txt";
 
     // Ouvrir le fichier en mode lecture
     FILE *fichier = fopen(bannerFile, "r");
@@ -226,7 +226,7 @@ void printBanner(){
 }
 
 void printWin(){
-    const char *bannerFile = "win.txt";
+    const char *bannerFile = "banners/win.txt";
 
     // Ouvrir le fichier en mode lecture
     FILE *fichier = fopen(bannerFile, "r");
@@ -249,7 +249,7 @@ void printWin(){
 }
 
 void printLose(){
-    const char *bannerFile = "lose.txt";
+    const char *bannerFile = "banners/lose.txt";
 
     // Ouvrir le fichier en mode lecture
     FILE *fichier = fopen(bannerFile, "r");
