@@ -82,7 +82,7 @@ Neighbours getNeighbours(Position position, Cell** grid) {
     return neighbours;
 }
 
-void displayGrid(Cell** grid) {
+void displayGrid(Cell** grid, bool hasLost) {
     // affichage des coordonnées en haut :
     printf("\u267F \u2502");
     for (int j = 0; j < WIDTH; j++){
@@ -94,17 +94,22 @@ void displayGrid(Cell** grid) {
         for (int j = 0; j <= WIDTH; j++) {
             printf("\u2500\u2500\u2500\u253C");
         }
-        printf("\n%02d \u2502", i);
+        printf(" \n%02d \u2502", i);
         for (int j = 0; j < WIDTH; j++) {
             if (grid[i][j].state == OUT) {
-                printf(" \u2591 \u2502");
+                printf(" \u2592 \u2502");
             }
             if (grid[i][j].state == HIDDEN) {
                 if (!grid[i][j].mine) {
                     printf("   \u2502"); // \u2588
                     //printf("%d", grid[i][j].adjacentMines);
                 } else {
-                    printf(" \u25A2 \u2502"); // Debbug \u25A0
+                    if(hasLost){
+                        printf(" \u25A0 \u2502"); //pour l'affichage défaite
+                    }
+                    else{
+                        printf(" \u26A0 \u2502"); // Debbug \u25A0
+                    }
                 }
             }
             // dans les printf: affichage sur 3 de large avec la séparation à la fin
@@ -112,7 +117,7 @@ void displayGrid(Cell** grid) {
                 if (!grid[i][j].mine) {
                     printf(" %d \u2502", grid[i][j].adjacentMines);
                 } else {
-                    printf(" M \u2502");
+                    printf(" \u25A2 \u2502");
                 }
             }
             if (grid[i][j].state == FLAGGED) {
@@ -131,12 +136,15 @@ Choice makeChoice(Cell** grid) {
     Position position;
     char action;
     bool isArg, isOut, isInvalidAction, isAlreadyRevealed, isAlreadyFlagged, isAlreadyUnflagged;
+    char input[100];
     do {
         printf("\n[+] choice (i j C) : ");
-        int argcount = scanf("%d %d %c", &position.i, &position.j, &action);
-        if(argcount == 3){
+        fgets(input, sizeof(input), stdin);
+        int argcount = sscanf(input, "%d %d %c", &position.i, &position.j, &action);
+        if(argcount != 3){
             isArg = false;
-            break;
+            printf("\n[Error] Invalid input.\n");
+            continue;
         }
         isArg = true;
         isOut = (position.i < 0 || position.j < 0 || position.i >= HEIGHT || position.j >= WIDTH) || (grid[position.i][position.j].state == OUT);

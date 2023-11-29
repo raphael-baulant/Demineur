@@ -39,7 +39,7 @@ int main() {
         printf("          (C = (R)eveal, (S)et, (U)nset).\n\n");
         printf("[Info] Remaining mines : %d\n", remainingMines);
         printf("[Info] Timer : 00:00:00 (TODO)\n\n");
-        displayGrid(grid);
+        displayGrid(grid, false);
         Choice choice = makeChoice(grid);
         executeAction(choice, grid, &unminedRevealedCells);
         if (choice.action == 'S') {
@@ -61,6 +61,7 @@ int main() {
         printWin();
     } else {
         printLose();
+        displayGrid(grid, true);
     }
 
     freeGrid(grid);
