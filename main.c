@@ -22,6 +22,7 @@ int main() {
     getchar();
     system("clear");
     // Efface le terminal (pour "rafraichir")
+
     
     srand((unsigned int)time(NULL));
     Cell** grid = allocateGrid();

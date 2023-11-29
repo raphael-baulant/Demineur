@@ -36,4 +36,7 @@ void printWin();
 // Affiche le message de défaite
 void printLose();
 
+//Affiche le chronomètre
+void print_timer();
+
 #endif
