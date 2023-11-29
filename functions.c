@@ -97,14 +97,14 @@ void displayGrid(Cell** grid) {
         printf("\n%02d \u2502", i);
         for (int j = 0; j < WIDTH; j++) {
             if (grid[i][j].state == OUT) {
-                printf("   \u2502");
+                printf(" \u2591 \u2502");
             }
             if (grid[i][j].state == HIDDEN) {
                 if (!grid[i][j].mine) {
-                    printf(" Z \u2502");
+                    printf(" \u2588 \u2502");
                     //printf("%d", grid[i][j].adjacentMines);
                 } else {
-                    printf(" M \u2502"); // Debbug
+                    printf(" \u25A0 \u2502"); // Debbug
                 }
             }
             // dans les printf: affichage sur 3 de large avec la séparation à la fin
@@ -116,7 +116,7 @@ void displayGrid(Cell** grid) {
                 }
             }
             if (grid[i][j].state == FLAGGED) {
-                printf(" F \u2502");
+                printf(" \u2691 \u2502");
             }
         }
     }
