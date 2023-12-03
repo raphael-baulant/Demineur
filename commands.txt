@@ -1,2 +1,2 @@
-gcc -o prog main.c functions.c
+gcc -o prog.exe main.c functions.c
 ./prog.exe

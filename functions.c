@@ -91,9 +91,10 @@ void displayGrid(Cell** grid, bool hasLost) {
     for (int i = 0; i < HEIGHT; i++) {
         printf("\n");
         //séparation de chaque ligne
-        for (int j = 0; j <= WIDTH; j++) {
+        for (int j = 0; j < WIDTH; j++) {
             printf("\u2500\u2500\u2500\u253C");
         }
+        printf("\u2500\u2500\u2500\u2524");
         printf(" \n%02d \u2502", i);
         for (int j = 0; j < WIDTH; j++) {
             if (grid[i][j].state == OUT) {
@@ -126,10 +127,10 @@ void displayGrid(Cell** grid, bool hasLost) {
         }
     }
     printf("\n");
-    for (int j = 0; j <= WIDTH; j++) {
+    for (int j = 0; j < WIDTH; j++) {
             printf("\u2500\u2500\u2500\u2534");
     }
-    printf("\n");
+    printf("\u2500\u2500\u2500\u2518\n");
 }
 
 Choice makeChoice(Cell** grid) {
@@ -249,7 +250,7 @@ void printLeaderboard(){
     printf("\n[Info] Difficulty : %d\n\n",HEIGHT);
     // Ajouter l'affichage des 3 meilleurs joueurs (fonction printLeader() => fonction getLeader())
     printf("[+] Press \"Enter\" for the menu\n");
-    sleep(3); // A SUPPRIMER 
+    sleep(3); // A SUPPRIMER
 }
 
 void printWin(){

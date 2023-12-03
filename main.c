@@ -91,6 +91,7 @@ int main() {
         // Ask the user to input his user name (record.txt);
     } else {
         printLose();
+        printf("\n\n"); //fix chrono display
         print_timer(timer);
         displayGrid(grid, true);
     }
