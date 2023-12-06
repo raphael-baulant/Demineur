@@ -21,7 +21,13 @@ int main() {
     bool exit = false; // Permet de rester dans le menu tant que l'utilisateur n'a pas choisi de sortir
     while(!exit){ 
         printMenu();
-        scanf("%d",&menuChoice);
+        char input[100];
+        fgets(input, sizeof(input), stdin);
+        int argcount = sscanf(input, "%d", &menuChoice);
+        if(argcount != 1) {
+            printf("\n[Error] Invalid choice.\n");
+            continue;
+        }
 
         /*
             MENU CHOICE 0 --> PLAY GAME
@@ -73,6 +79,7 @@ int main() {
                     timer = timeLastChoice - timeFirstChoice;
                 }
                 system("clear");
+                hasWon = true; //debbug
             } while(!hasLost && !hasWon);
 
             // game end (win or lose)
@@ -80,6 +87,7 @@ int main() {
                 printWin();
                 print_timer(timer);
                 // Ask the user to input his user name (record.txt);
+                saveWinningGame("timer");
             } else {
                 printLose();
                 printf("\n\n"); //fix chrono display

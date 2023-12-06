@@ -48,5 +48,8 @@ void printLose();
 // Ajouter une ligne dans le fichier des enregistrement des victoires
 void addRecord(char* username, int timer);
 
+// Sauvegarder partie gagnée
+void saveWinningGame(char *timer);
+
 
 #endif

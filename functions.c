@@ -277,10 +277,10 @@ void addRecord(char* username, int timer){
     fclose(file);  // Fermeture du fichier
 }
 
-void saveWinningGame() {
+void saveWinningGame(char *timer) {
     time_t tempsActuel;
     struct tm *tempsInfos;
-    char fileName[20]; // Chaîne pour stocker la date et l'heure (14/12/2023-14:30)
+    char fileName[20]; // Chaîne pour stocker la date et l'heure (14-12-2023-14h30)
 
     // Obtenir le temps actuel
     time(&tempsActuel);
@@ -289,12 +289,19 @@ void saveWinningGame() {
     tempsInfos = localtime(&tempsActuel);
 
     // Formater la date et l'heure dans la chaîne de caractères
-    strftime(fileName, sizeof(fileName), "%d/%m/%Y-%H:%M", tempsInfos);
+    strftime(fileName, sizeof(fileName), "%d-%m-%Y-%Hh%M", tempsInfos);
 
     // Afficher la chaîne de caractères contenant la date et l'heure au format spécifié
     printf("Date et heure actuelles : %s\n", fileName);
 
-    f = fopen("Winning Games", fileName, "w");
+    FILE *f;
+    char repositoryName[15] = "Winning Games/";
+    char *path = strcat(repositoryName, fileName);
+    f = fopen(path, "w");
+
+    fprintf(f, "Première ligne\n");
+    fprintf(f, "Deuxième ligne\n");
+    fprintf(f, "Troisième ligne\n");
 
     //difficulties
     //time
