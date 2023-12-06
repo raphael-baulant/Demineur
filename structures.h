@@ -31,4 +31,10 @@ typedef struct {
     Position* positions;
 } Neighbours;
 
+typedef struct
+{
+    char username[50];
+    int time;
+} Score;
+
 #endif
