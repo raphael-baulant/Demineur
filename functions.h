@@ -28,7 +28,7 @@ void revealChain(Position position, Cell** grid, int *unminedRevealedCells);
 Neighbours getNeighbours(Position position, Cell** grid);
 
 // Affiche le chronomètre
-void printTimer();
+void printTimer(Timer timer);
 
 // Retourne le chronomètre
 Timer getTimer(int x);
@@ -52,7 +52,7 @@ void printLose();
 void addRecord(char* username, int timer);
 
 // Sauvegarder partie gagnée
-void saveWinningGame(char *timer);
+void saveWinningGame(Timer timer);
 
 
 #endif
