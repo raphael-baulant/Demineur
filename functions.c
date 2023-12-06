@@ -211,8 +211,7 @@ void revealChain(Position position, Cell** grid, int *unminedRevealedCells) {
     free(neighbours.positions);
 }
 
-void printTimer(int x) {
-    Timer timer = getTimer(x);
+void printTimer(Timer timer) {
     printf("[Info] Timer : %02d:%02d:%02d\n\n", timer.h, timer.m, timer.s);
 }
 
@@ -275,7 +274,7 @@ void addRecord(char* username, int timer){
     fclose(file);  // Fermeture du fichier
 }
 
-void saveWinningGame(char *timer) {
+void saveWinningGame(Timer timer) {
     time_t tempsActuel;
     struct tm *tempsInfos;
     char fileName[20]; // Chaîne pour stocker la date et l'heure (14-12-2023-14h30)
@@ -297,12 +296,9 @@ void saveWinningGame(char *timer) {
     char *path = strcat(repositoryName, fileName);
     f = fopen(path, "w");
 
-    fprintf(f, "Première ligne\n");
-    fprintf(f, "Deuxième ligne\n");
-    fprintf(f, "Troisième ligne\n");
-
-    //difficulties
-    //time
+    fprintf(f, "Hauteur de la grille : %d\n", HEIGHT);
+    fprintf(f, "Timer : %02d:%02d:%02d\n", timer.h, timer.m, timer.s);
+    fprintf(f, "Grille\n");
 
     fclose(f);
 }
