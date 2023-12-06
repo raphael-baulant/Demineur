@@ -27,8 +27,11 @@ void revealChain(Position position, Cell** grid, int *unminedRevealedCells);
 // Retourne les positions des cellules voisines (dans la forme X)
 Neighbours getNeighbours(Position position, Cell** grid);
 
-//Affiche le chronomètre
-void print_timer();
+// Affiche le chronomètre
+void printTimer();
+
+// Retourne le chronomètre
+Timer getTimer(int x);
 
 // Fonction pour afficher un ASCII Art du dossier /banner
 void printBanner(char* bannerFile);

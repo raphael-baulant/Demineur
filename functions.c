@@ -211,12 +211,18 @@ void revealChain(Position position, Cell** grid, int *unminedRevealedCells) {
     free(neighbours.positions);
 }
 
-void print_timer(int x) {
-    int h,m,s;
+void printTimer(int x) {
+    Timer timer = getTimer(x);
+    printf("[Info] Timer : %02d:%02d:%02d\n\n", timer.h, timer.m, timer.s);
+}
+
+Timer getTimer(int x) {
+    int h, m, s;
     h = x / 3600;
     m = (x % 3600) / 60;
     s = (x % 3600) % 60;
-    printf("[Info] Timer : %02d:%02d:%02d\n\n", h,m,s);
+    Timer timer = {h, m, s};
+    return timer;
 }
 
 void printBanner(char* bannerFile){
