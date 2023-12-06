@@ -277,3 +277,27 @@ void addRecord(char* username, int timer){
     fclose(file);  // Fermeture du fichier
 }
 
+void saveWinningGame() {
+    time_t tempsActuel;
+    struct tm *tempsInfos;
+    char fileName[20]; // Chaîne pour stocker la date et l'heure (14/12/2023-14:30)
+
+    // Obtenir le temps actuel
+    time(&tempsActuel);
+
+    // Convertir le temps actuel en une structure tm pour accéder aux informations de date et d'heure
+    tempsInfos = localtime(&tempsActuel);
+
+    // Formater la date et l'heure dans la chaîne de caractères
+    strftime(fileName, sizeof(fileName), "%d/%m/%Y-%H:%M", tempsInfos);
+
+    // Afficher la chaîne de caractères contenant la date et l'heure au format spécifié
+    printf("Date et heure actuelles : %s\n", fileName);
+
+    f = fopen("Winning Games", fileName, "w");
+
+    //difficulties
+    //time
+
+    fclose(f);
+}
