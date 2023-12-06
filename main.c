@@ -22,7 +22,13 @@ int main() {
 
     while(!exit){ 
         printMenu();
-        scanf("%d",&menuChoice);
+        char input[100];
+        fgets(input, sizeof(input), stdin);
+        int argcount = sscanf(input, "%d", &menuChoice);
+        if(argcount != 1) {
+            printf("\n[Error] Invalid choice.\n");
+            continue;
+        }
 
         /*
             MENU CHOICE 0 --> PLAY GAME
@@ -49,7 +55,7 @@ int main() {
                 printf("[Reminder] A choice is a position (i,j) and an action C.\n");
                 printf("          (C = (R)eveal, (S)et, (U)nset).\n\n");
                 printf("[Info] Remaining mines : %d\n", remainingMines);
-                print_timer(timer);
+                printTimer(timer);
                 displayGrid(grid,false);
                 Choice choice = makeChoice(grid);
                 executeAction(choice, grid, &unminedRevealedCells);
@@ -75,13 +81,13 @@ int main() {
                     timer = timeLastChoice - timeFirstChoice;
                 }
                 system("clear");
-                hasWon = true;
+                hasWon = true; //debbug
             } while(!hasLost && !hasWon);
 
             // game end (win or lose)
             if (hasWon) {
                 printWin();
-                print_timer(timer);
+                printTimer(timer);
                 printf("\nPlease enter your username : ");
                 char username[50];
                 scanf("%s",&username);
@@ -91,7 +97,7 @@ int main() {
                 printf("\n\n");
                 printLose();
                 printf("\n\n"); //fix chrono display
-                print_timer(timer);
+                printTimer(timer);
                 sleep(5); // Faire en sorte que le joueur doive presser entrée pour revenir au menu
             }
             freeGrid(grid);

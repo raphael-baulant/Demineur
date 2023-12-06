@@ -211,12 +211,18 @@ void revealChain(Position position, Cell** grid, int *unminedRevealedCells) {
     free(neighbours.positions);
 }
 
-void print_timer(int x) {
-    int h,m,s;
+void printTimer(int x) {
+    Timer timer = getTimer(x);
+    printf("[Info] Timer : %02d:%02d:%02d\n\n", timer.h, timer.m, timer.s);
+}
+
+Timer getTimer(int x) {
+    int h, m, s;
     h = x / 3600;
     m = (x % 3600) / 60;
     s = (x % 3600) % 60;
-    printf("            [Info] Timer : %02d:%02d:%02d\n\n", h,m,s);
+    Timer timer = {h, m, s};
+    return timer;
 }
 
 void printBanner(char* bannerFile){
@@ -277,10 +283,10 @@ void addRecord(char* username, int timer){
     fclose(file);  // Fermeture du fichier
 }
 
-void saveWinningGame() {
+void saveWinningGame(char *timer) {
     time_t tempsActuel;
     struct tm *tempsInfos;
-    char fileName[20]; // Chaîne pour stocker la date et l'heure (14/12/2023-14:30)
+    char fileName[20]; // Chaîne pour stocker la date et l'heure (14-12-2023-14h30)
 
     // Obtenir le temps actuel
     time(&tempsActuel);
@@ -289,12 +295,19 @@ void saveWinningGame() {
     tempsInfos = localtime(&tempsActuel);
 
     // Formater la date et l'heure dans la chaîne de caractères
-    strftime(fileName, sizeof(fileName), "%d/%m/%Y-%H:%M", tempsInfos);
+    strftime(fileName, sizeof(fileName), "%d-%m-%Y-%Hh%M", tempsInfos);
 
     // Afficher la chaîne de caractères contenant la date et l'heure au format spécifié
     printf("Date et heure actuelles : %s\n", fileName);
 
-    f = fopen("Winning Games", fileName, "w");
+    FILE *f;
+    char repositoryName[15] = "Winning Games/";
+    char *path = strcat(repositoryName, fileName);
+    f = fopen(path, "w");
+
+    fprintf(f, "Première ligne\n");
+    fprintf(f, "Deuxième ligne\n");
+    fprintf(f, "Troisième ligne\n");
 
     //difficulties
     //time
