@@ -2,4 +2,3 @@
 8:champion:300
 8:alexandre:8000
 8:anthony:7500
-

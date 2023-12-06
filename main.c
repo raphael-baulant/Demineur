@@ -19,6 +19,7 @@ int main() {
 
     int menuChoice; // Choix de l'utilisateur (0=Play, 1=Leaderboard, 2=Exit)
     bool exit = false; // Permet de rester dans le menu tant que l'utilisateur n'a pas choisi de sortir
+
     while(!exit){ 
         printMenu();
         char input[100];
@@ -33,7 +34,7 @@ int main() {
             MENU CHOICE 0 --> PLAY GAME
         */
         if(menuChoice == 0){
-            
+
             // initialize game (create a struct and initialization function!)
             srand((unsigned int)time(NULL));
             Cell** grid = allocateGrid();
@@ -50,6 +51,7 @@ int main() {
 
             // play loop
             do {
+                system("clear");
                 printf("[Reminder] A choice is a position (i,j) and an action C.\n");
                 printf("          (C = (R)eveal, (S)et, (U)nset).\n\n");
                 printf("[Info] Remaining mines : %d\n", remainingMines);
@@ -79,20 +81,33 @@ int main() {
                     timer = timeLastChoice - timeFirstChoice;
                 }
                 system("clear");
+<<<<<<< HEAD
                 hasWon = true; //debbug
+=======
+                hasWon = true;
+>>>>>>> 6a3a31a2bb1e08e3afe323386acd13940e939570
             } while(!hasLost && !hasWon);
 
             // game end (win or lose)
             if (hasWon) {
                 printWin();
                 print_timer(timer);
+<<<<<<< HEAD
                 // Ask the user to input his user name (record.txt);
                 saveWinningGame("timer");
+=======
+                printf("\nPlease enter your username : ");
+                char username[50];
+                scanf("%s",&username);
+                addRecord(username, timer);
+>>>>>>> 6a3a31a2bb1e08e3afe323386acd13940e939570
             } else {
+                displayGrid(grid, true);
+                printf("\n\n");
                 printLose();
                 printf("\n\n"); //fix chrono display
                 print_timer(timer);
-                displayGrid(grid, true);
+                sleep(5); // Faire en sorte que le joueur doive presser entrée pour revenir au menu
             }
             freeGrid(grid);
         }
