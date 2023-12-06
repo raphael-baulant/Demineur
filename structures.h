@@ -35,6 +35,6 @@ typedef struct
 {
     char username[50];
     int time;
-} Score;
+} Record;
 
 #endif
