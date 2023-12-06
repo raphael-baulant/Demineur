@@ -12,6 +12,7 @@
 
 // function to get the 3 best score from scoreboard file
 
+
 // function to print the podium (3 best score)
 void printScoreboard(){
     const char *bannerFile = "banners/scoreboard.txt";
