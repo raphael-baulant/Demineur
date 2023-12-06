@@ -89,8 +89,14 @@ int main() {
                 printWin();
                 printTimer(timer);
                 printf("\nPlease enter your username : ");
-                char username[50];
-                scanf("%s",&username);
+                char username[100];
+                do{
+                    fgets(input, sizeof(input), stdin);
+                    int argcount = sscanf(input, "%s", &username);
+                    if(argcount != 1) {
+                        printf("\n[Error] Invalid choice.\n");
+                    }
+                }while(argcount != 1);
                 addRecord(username, timer);
             } else {
                 displayGrid(grid, true);

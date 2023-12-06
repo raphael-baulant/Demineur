@@ -251,14 +251,6 @@ void printMenu(){
     printf("                                [2] Exit\n\n");
 }   
 
-void printLeaderboard(){
-    printBanner("banners/leaderboard.txt");
-    printf("\n[Info] Difficulty : %d\n\n",HEIGHT);
-    // Ajouter l'affichage des 3 meilleurs joueurs (fonction printLeader() => fonction getLeader())
-    printf("[+] Press \"Enter\" for the menu\n");
-    sleep(3); // A SUPPRIMER
-}
-
 void printWin(){
     printBanner("banners/win.txt");
 }
@@ -313,4 +305,89 @@ void saveWinningGame(char *timer) {
     //time
 
     fclose(f);
+}
+
+// Function that return the number of record for a given difficulty
+int getNumberOfRecordsByDifficulty(int targetDifficulty){
+    int lines = 0;
+    int difficulty;
+
+    FILE *fichier = fopen("record.txt", "r");
+    if (fichier == NULL) {
+        perror("Erreur lors de l'ouverture du fichier");
+        return 0;
+    }
+
+    while (fscanf(fichier, "%d:%*49[^:]:%*d", &difficulty) == 1) {
+        // Afficher les valeurs sous la forme "[difficulty] username - timer"
+        if(difficulty == targetDifficulty)
+            lines++;
+    }
+
+    return lines;
+}
+
+// Function used to compare two Record (by time) --> qsort
+int compareRecords(const void *a, const void *b) {
+    return ((Record *)a)->time - ((Record *)b)->time;
+}
+
+// Function that return a list of Records (username and time) sorted by ascendant time
+Record* getSortedRecords(int targetDifficulty) {
+    
+    int lines = getNumberOfRecordsByDifficulty(targetDifficulty);
+    int difficulty;
+    char username[50];
+    int time;
+
+    FILE *fichier = fopen("record.txt", "r");
+    if (fichier == NULL) {
+        perror("Erreur lors de l'ouverture du fichier");
+        return NULL;
+    }
+
+    Record* RecordsList = malloc(sizeof(Record) * lines);
+
+    // Réinitialiser le curseur du fichier
+    fseek(fichier, 0, SEEK_SET);
+    int i = 0;
+
+    // Lire le fichier ligne par ligne
+    while (fscanf(fichier, "%d:%49[^:]:%d", &difficulty, username, &time) == 3) {
+        // Afficher les valeurs sous la forme "[difficulty] username - timer"
+        if(difficulty == targetDifficulty){
+            strcpy(RecordsList[i].username, username);
+            RecordsList[i].time = time;
+            i++;
+        }
+    }
+    fclose(fichier);
+    qsort(RecordsList, lines, sizeof(Record), compareRecords);
+    return RecordsList;
+}
+
+void printBestRecord(int targetDifficulty){
+    Record* sortedRecords = getSortedRecords(targetDifficulty);
+    int numberOfRecords = getNumberOfRecordsByDifficulty(targetDifficulty);
+
+    if(numberOfRecords>3){
+        for(int i=0; i<3; i++){
+            Timer timer = getTimer(sortedRecords[i].time);
+            printf("    [%d] %s | timer : %02d:%02d:%02d\n",i,sortedRecords[i].username,timer.h,timer.m,timer.s);
+        }
+    }
+    else{
+        for(int i=0; i<numberOfRecords; i++){
+            Timer timer = getTimer(sortedRecords[i].time);
+            printf("    [%d] %s | timer : %02d:%02d:%02d\n",i,sortedRecords[i].username,timer.h,timer.m,timer.s);
+        }
+    }
+}
+
+void printLeaderboard(){
+    printBanner("banners/leaderboard.txt");
+    printf("\n[Info] Difficulty : %d\n\n",HEIGHT);
+    printBestRecord(HEIGHT);
+    printf("\n[+] Press \"Enter\" for the menu\n");
+    sleep(3); // A SUPPRIMER
 }

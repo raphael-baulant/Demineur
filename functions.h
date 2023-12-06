@@ -54,5 +54,13 @@ void addRecord(char* username, int timer);
 // Sauvegarder partie gagnée
 void saveWinningGame(char *timer);
 
+// Retourne le nombre d'entrée du fichier des score pour une difficulté donnée
+int getNumberOfRecordsByDifficulty(int targetDifficulty);
+
+// Fonction utilisée par la fonction qsort pour trier les scores
+int compareRecords(const void *a, const void *b);
+
+// Retourne un tableau des scores triés par ordre croissant (time)
+Record* getSortedRecords(int targetDifficulty);
 
 #endif
