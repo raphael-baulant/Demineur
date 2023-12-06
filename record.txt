@@ -2,3 +2,6 @@
 8:champion:300
 8:alexandre:8000
 8:anthony:7500
+8:test:458555
+8:best:10
+18:matheo:2500
