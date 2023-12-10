@@ -378,6 +378,7 @@ void printBestRecord(int targetDifficulty){
             printf("    [%d] %s | timer : %02d:%02d:%02d\n",i,sortedRecords[i].username,timer.h,timer.m,timer.s);
         }
     }
+    free(sortedRecords);
 }
 
 void printLeaderboard(){

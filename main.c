@@ -81,7 +81,6 @@ int main() {
                     timer = timeLastChoice - timeFirstChoice;
                 }
                 system("clear");
-                hasWon = true; //debbug
             } while(!hasLost && !hasWon);
 
             // game end (win or lose)
@@ -105,7 +104,7 @@ int main() {
                 printLose();
                 printf("\n\n"); //fix chrono display
                 printTimer(getTimer(timer));
-                sleep(5); // Faire en sorte que le joueur doive presser entrée pour revenir au menu
+                getchar(); // Faire en sorte que le joueur doive presser entrée pour revenir au menu
             }
             freeGrid(grid);
         }
