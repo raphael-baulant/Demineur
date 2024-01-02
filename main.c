@@ -1,130 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <time.h>
-#include "structures.h"
-#include "constants.h"
-#include "functions.h"
-#include <time.h>
-#include <string.h>
-#include <unistd.h>
+#include "banner.h"
+#include "menu.h"
+#include "difficulty.h"
+#include "game.h"
+#include "leaderboard.h"
 
 int main() {
-    system("clear"); // Efface le terminal
-
-    if (HEIGHT < 3) {
-        printf("[ERROR] The height parameter must be at least 2. Please correct it in constants.h file.");
-        return 0;
+    while (1) {
+        system("cls");
+        show_banner("banners/minesweeper.txt");
+        show_menu();
+        int choice = select_menu();
+        system("cls");
+        switch (choice) {
+            case 1:
+                show_difficulty();
+                Difficulty difficulty = select_difficulty();
+                system("cls");
+                play_game(difficulty);
+                printf("\033[33m[Waiting]\033[0m Press enter to return to the menu...");
+                while (getchar() != '\n');
+                break;
+            case 2:
+                show_banner("banners/leaderboard.txt");
+                show_leaderboard(EASY);
+                show_leaderboard(MEDIUM);
+                show_leaderboard(HARD);
+                printf("\033[33m[Waiting]\033[0m Press enter to return to the menu...");
+                while (getchar() != '\n');
+                break;
+            case 3:
+                show_banner("banners/minesweeper.txt");
+                printf("Hope you enjoyed the game! Goodbye!\n");
+                return 0;
+            default:
+                break;
+        }
     }
-
-    int menuChoice; // Choix de l'utilisateur (0=Play, 1=Leaderboard, 2=Exit)
-    bool exit = false; // Permet de rester dans le menu tant que l'utilisateur n'a pas choisi de sortir
-
-    while(!exit){ 
-        printMenu();
-        char input[100];
-        fgets(input, sizeof(input), stdin);
-        int argcount = sscanf(input, "%d", &menuChoice);
-        if(argcount != 1) {
-            printf("\n[Error] Invalid choice.\n");
-            continue;
-        }
-
-        /*
-            MENU CHOICE 0 --> PLAY GAME
-        */
-        if(menuChoice == 0){
-
-            // initialize game (create a struct and initialization function!)
-            srand((unsigned int)time(NULL));
-            Cell** grid = allocateGrid();
-            initialiseGrid(grid);
-            bool hasLost = false;
-            bool hasWon = false;
-            bool firstChoice = true;
-            int mines = (int)(PROBA * Z + 0.5);
-            int maxUnminedRevealedCells = Z - mines;
-            int unminedRevealedCells = 0;
-            int remainingMines = mines;
-            time_t timeFirstChoice, timeLastChoice;
-            int timer = 0; // seconds since the first action
-
-            // play loop
-            do {
-                system("clear");
-                printf("[Reminder] A choice is a position (i,j) and an action C.\n");
-                printf("          (C = (R)eveal, (S)et, (U)nset).\n\n");
-                printf("[Info] Remaining mines : %d\n", remainingMines);
-                printTimer(getTimer(timer));
-                displayGrid(grid,false);
-                Choice choice = makeChoice(grid);
-                executeAction(choice, grid, &unminedRevealedCells);
-                if (choice.action == 'S') {
-                    remainingMines--;
-                }
-                if (choice.action == 'U') {
-                    remainingMines++;
-                }
-                if (choice.action == 'R' && grid[choice.position.i][choice.position.j].mine) {
-                    hasLost = true;
-                }
-                if (unminedRevealedCells == maxUnminedRevealedCells) {
-                    hasWon = true;
-                }
-
-                if(firstChoice){
-                    timeFirstChoice = time(NULL);
-                    timeLastChoice = timeFirstChoice;
-                    firstChoice = false;
-                }else{
-                    timeLastChoice = time(NULL);
-                    timer = timeLastChoice - timeFirstChoice;
-                }
-                system("clear");
-            } while(!hasLost && !hasWon);
-
-            // game end (win or lose)
-            if (hasWon) {
-                printWin();
-                printTimer(getTimer(timer));
-                printf("\nPlease enter your username : ");
-                char username[100];
-                do{
-                    fgets(input, sizeof(input), stdin);
-                    int argcount = sscanf(input, "%s", &username);
-                    if(argcount != 1) {
-                        printf("\n[Error] Invalid choice.\n");
-                    }
-                }while(argcount != 1);
-                addRecord(username, timer);
-                saveWinningGame(getTimer(timer));
-            } else {
-                displayGrid(grid, true);
-                printf("\n\n");
-                printLose();
-                printf("\n\n"); //fix chrono display
-                printTimer(getTimer(timer));
-                getchar(); // Faire en sorte que le joueur doive presser entrée pour revenir au menu
-            }
-            freeGrid(grid);
-        }
-
-        /*
-            MENU CHOICE = 1 --> LEADERBOARD
-        */
-        if(menuChoice == 1){
-            system("clear");
-            printLeaderboard();
-            getchar(); // fonctionne pas
-        } 
-
-        /*
-            MENU CHOICE = 2 --> EXIT
-        */
-        if(menuChoice == 2){
-            exit = true;
-        }
-        system("clear"); // Efface le terminal (pour "rafraichir")
-    }
-    return 0; 
 }

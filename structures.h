@@ -3,17 +3,17 @@
 
 #include <stdbool.h>
 
-enum CellState {
+typedef enum {
     OUT,
     HIDDEN,
     REVEALED,
     FLAGGED
-};
+} State;
 
 typedef struct {
-    bool mine;
-    enum CellState state;
-    int adjacentMines;
+    bool is_mine;
+    State state;
+    int adjacent_mines;
 } Cell;
 
 typedef struct {
@@ -22,24 +22,38 @@ typedef struct {
 } Position;
 
 typedef struct {
-    Position position;
-    char action;
-} Choice;
+    Cell **cells;
+    int height;
+    int width;
+    int x_bar_width;
+    int playable_cells;
+    Position *playable_cells_positions;
+    float mines_proba;
+    int mines;
+    int remaining_mines;
+    int unmined_cells;
+    int unmined_revealed_cells;
+} Board;
 
 typedef struct {
     int number;
-    Position* positions;
+    Position positions[8];
 } Neighbours;
 
 typedef struct {
-    char username[50];
-    int time;
-} Record;
+    Position position;
+    char action;
+} Move;
+
+typedef enum {
+    EASY,
+    MEDIUM,
+    HARD
+} Difficulty;
 
 typedef struct {
-    int h;
-    int m;
-    int s;
+    int minutes;
+    int seconds;
 } Timer;
 
-#endif
+#endif /* STRUCTURES_H */
