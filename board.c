@@ -335,9 +335,10 @@ const char* get_board_string(Board board, bool show_mines, bool colored) {
                 }
             }
             if (cell.state == HIDDEN) {
-                if (cell.is_mine) {
-                    strcat(output, "\u2502 \u25A0 ");
-                } else if (!show_mines || !cell.is_mine) {
+                //if (cell.is_mine) {
+                    //strcat(output, "\u2502 \u25A0 ");
+                //} else if (!show_mines || !cell.is_mine) {
+                if (!show_mines || !cell.is_mine) {
                     strcat(output, "\u2502   ");
                 } else {
                     strcat(output, "\u2502 \u25A0 ");
