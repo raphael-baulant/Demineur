@@ -148,7 +148,7 @@ void play_game(Difficulty difficulty) {
     // Variables pour stocker le temps de début et de fin
     time_t start, end;
 
-    /*reminder();
+    reminder();
     do {
         printf("\033[32m[Info]\033[0m ");
         show_remaining_mines(board);
@@ -179,14 +179,14 @@ void play_game(Difficulty difficulty) {
             timer = get_timer(time_elapsed);
         }
 
-        clear_screen();
+        system("clear");
     } while (!win && !loss);
 
     printf("\033[32m[Info]\033[0m ");
     show_timer(timer);
     printf("\n\n");
     show_board(board, true, true);
-    printf("\n\n");*/
+    printf("\n\n");
 
     if (win) {
         show_banner("banners/win.txt");
@@ -271,21 +271,9 @@ void archive_game(char *player_name, Difficulty difficulty, Timer timer, Board b
     
     // Restaurer la sortie standard vers la console
     fflush(stdout);
-    #ifdef _WIN32
-    freopen("CON", "w", stdout);
-    #else
-        freopen("/dev/tty", "w", stdout);
-    #endif
+    freopen("/dev/tty", "w", stdout);
 
     fclose(file);
-}
-
-void clear_screen() {
-    #ifdef _WIN32
-        system("cls"); // Effacer l'écran dans une fenêtre de commande Windows (cmd)
-    #else
-        //system("clear"); // Effacer l'écran dans un terminal Linux / UNIX
-    #endif
 }
 
 const char* get_timestamp() {

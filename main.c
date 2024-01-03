@@ -9,23 +9,18 @@
 
 int main() {
     srand((unsigned int)time(NULL));
-    
-    play_game(EASY);
-    show_banner("banners/minesweeper.txt");
-    clear_screen();
-    show_banner("banners/minesweeper.txt");
 
-    /*while (1) {
-        clear_screen();
+    while (1) {
+        system("clear");
         show_banner("banners/minesweeper.txt");
         show_menu();
         int choice = select_menu();
-        clear_screen();
+        system("clear");
         switch (choice) {
             case MENU_PLAY_GAME:
                 show_difficulty();
                 Difficulty difficulty = select_difficulty();
-                clear_screen();
+                system("clear");
                 play_game(difficulty);
                 printf("\033[33m[Waiting]\033[0m Press enter to return to the menu...");
                 while (getchar() != '\n');
@@ -45,5 +40,5 @@ int main() {
             default:
                 break;
         }
-    }*/
+    }
 }
