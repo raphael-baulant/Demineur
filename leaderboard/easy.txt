@@ -1,17 +1,6 @@
-00:00 Test
-00:00 Test
-00:00 Test
-00:00 Rapha
-00:10 Test
-00:11 Test
-00:13 Pierre
-00:21 Test
-00:21 Test
-00:22 Rapha
-00:24 Rapha
-00:26 Test
+00:06 Rapha
+00:17 Adibou
 00:27 Alex
-00:28 Martin
 00:32 matheo big boss
+00:33 Adibou 2
 00:50 Rapha le King
-00:59 Matheo
