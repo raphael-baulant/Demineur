@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "banner.h"
 #include "menu.h"
 #include "difficulty.h"
@@ -7,7 +8,9 @@
 #include "leaderboard.h"
 
 int main() {
-    while (1) {
+    srand((unsigned int)time(NULL));
+    play_game(HARD);
+    /*while (1) {
         clear_screen();
         show_banner("banners/minesweeper.txt");
         show_menu();
@@ -37,5 +40,5 @@ int main() {
             default:
                 break;
         }
-    }
+    }*/
 }

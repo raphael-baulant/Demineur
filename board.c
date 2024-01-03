@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 const char BOARD_COORDINATES[] = {
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -20,16 +19,11 @@ const char BOARD_COORDINATES[] = {
 #define HARD_MINES_PROBA 0.2
 
 void alloc_board(Board *board) {
-    Cell **cells;
-    cells = (Cell**)malloc(board->height * sizeof(Cell*));
+    board->cells = (Cell**)malloc(board->height * sizeof(Cell*));
     for (int i = 0; i < board->height; i++) {
-        cells[i] = (Cell*)malloc(board->width * sizeof(Cell));
+        board->cells[i] = (Cell*)malloc(board->width * sizeof(Cell));
     }
-    board->cells = cells;
-
-    Position *playable_cells_positions;
-    playable_cells_positions = (Position*)malloc(board->playable_cells * sizeof(Position));
-    board->playable_cells_positions = playable_cells_positions;
+    board->playable_cells_positions = (Position*)malloc(board->playable_cells * sizeof(Position));
 }
 
 void free_board(Board *board) {
@@ -37,7 +31,6 @@ void free_board(Board *board) {
         free(board->cells[i]);
     }
     free(board->cells);
-    
     free(board->playable_cells_positions);
 }
 
@@ -71,26 +64,28 @@ void init_cells(Board *board) {
 Neighbours get_neighbours(Board board, Position position) {
     Neighbours neighbours;
     neighbours.number = 0;
+    
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
             if (i != 0 || j != 0) {
                 int k = position.i + i;
                 int l = position.j + j;
+                
                 if (k >= 0 && k < board.height && l >= 0 && l < board.width) {
                     if (board.cells[position.i][position.j].state != OUT) {
-                        Position position = {k, l};
-                        neighbours.positions[neighbours.number] = position;
+                        Position neighbour_position = {k, l};
+                        neighbours.positions[neighbours.number] = neighbour_position;
                         neighbours.number++;
                     }
                 }
             }
         }
     }
+    
     return neighbours;
 }
 
 void place_mines(Board *board) {
-    srand((unsigned int)time(NULL));
     int count = 0;
     while (count < board->mines) {
         int random = rand() % board->playable_cells;
@@ -205,7 +200,7 @@ void reveal_empty_cells(Board *board, Position position) {
 
 // Garder cette fonction si on se rend compte que stocker le board dans une chaine n'est pas opti
 // L'avantage de le stocker dans une chaine est de pouvoir facilement l'insérer dans les fichiers d'archive
-/*void show_board(Board board, bool show_mines) {
+void show_board(Board board, bool show_mines) {
     printf("   ");
     for (int j = 0; j < board.width; j++) {
         printf("  %c ", BOARD_COORDINATES[j]);
@@ -249,7 +244,7 @@ void reveal_empty_cells(Board *board, Position position) {
             }
             if (cell.state == HIDDEN) {
                 if (cell.is_mine) {
-                    printf("\u2502 \u25A0 "); // Aide
+                    printf("\u2502 \u25A0 ");
                 } else if (!show_mines || !cell.is_mine) {
                     printf("\u2502   ");
                 } else {
@@ -258,7 +253,7 @@ void reveal_empty_cells(Board *board, Position position) {
             }
             if (cell.state == REVEALED) {
                 if (!show_mines || !cell.is_mine) {
-                    printf("\u2502 %s ", get_colour(cell.adjacent_mines));
+                    printf("\u2502 %s ", get_colour(cell.adjacent_mines, true));
                 } else {
                     printf("\u2502 \u25A2 ");
                 }
@@ -282,15 +277,16 @@ void reveal_empty_cells(Board *board, Position position) {
         printf("  %c ", BOARD_COORDINATES[j]);
     }
     printf("\n\n");
-}*/
-
-void show_board(Board board, bool show_mines) {
-    const char* board_string = get_board_string(board, show_mines, true);
-    printf("%s\n\n", board_string);
 }
 
-const char* get_board_string(Board board, bool show_mines, bool colored) {
-    static char output[10000];
+/*void show_board(Board board, bool show_mines) {
+    char* board_string = get_board_string(board, show_mines, true);
+    printf("%s\n\n", board_string);
+    free(board_string);
+}
+
+char* get_board_string(Board board, bool show_mines, bool colored) {
+    char* output = (char*)malloc(10000 * sizeof(char));
     output[0] = '\0';
 
     strcat(output, "   ");
@@ -335,10 +331,9 @@ const char* get_board_string(Board board, bool show_mines, bool colored) {
                 }
             }
             if (cell.state == HIDDEN) {
-                //if (cell.is_mine) {
-                    //strcat(output, "\u2502 \u25A0 ");
-                //} else if (!show_mines || !cell.is_mine) {
-                if (!show_mines || !cell.is_mine) {
+                if (cell.is_mine) {
+                    strcat(output, "\u2502 \u25A0 ");
+                } else if (!show_mines || !cell.is_mine) {
                     strcat(output, "\u2502   ");
                 } else {
                     strcat(output, "\u2502 \u25A0 ");
@@ -371,7 +366,7 @@ const char* get_board_string(Board board, bool show_mines, bool colored) {
     }
 
     return output;
-}
+}*/
 
 const char* get_colour(int adjacent_mines, bool colored) {
     static char output[20];

@@ -15,7 +15,7 @@ void init_board(Board *board, Difficulty difficulty);
 void update_board(Board *board, Move move);
 void reveal_empty_cells(Board *board, Position position);
 void show_board(Board board, bool show_mines);
-const char* get_board_string(Board board, bool show_mines, bool colored);
+//char* get_board_string(Board board, bool show_mines, bool colored);
 const char* get_colour(int adjacent_mines, bool colored);
 
 #endif /* BOARD_H */
