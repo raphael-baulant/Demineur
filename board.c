@@ -195,6 +195,8 @@ void reveal_empty_cells(Board *board, Position position) {
                     if (!board->cells[neighbours.positions[k].i][neighbours.positions[k].j].is_mine) {
                         board->unmined_revealed_cells++;
                         reveal_empty_cells(board, neighbours.positions[k]);
+                    } else {
+                        board->loss = true;
                     }
                 }
             }
