@@ -198,7 +198,7 @@ void reveal_empty_cells(Board *board, Position position) {
     }
 }
 
-void show_board(Board board, bool show_mines) {
+void show_board(Board board, bool show_mines, bool coloured) {
     printf("   ");
     for (int j = 0; j < board.width; j++) {
         printf("  %c ", BOARD_COORDINATES[j]);
@@ -251,7 +251,7 @@ void show_board(Board board, bool show_mines) {
             }
             if (cell.state == REVEALED) {
                 if (!show_mines || !cell.is_mine) {
-                    printf("\u2502 %s ", get_colour(cell.adjacent_mines, true));
+                    printf("\u2502 %s ", get_colour(cell.adjacent_mines, coloured));
                 } else {
                     printf("\u2502 \u25A2 ");
                 }
@@ -274,16 +274,15 @@ void show_board(Board board, bool show_mines) {
     for (int j = 0; j < board.width; j++) {
         printf("  %c ", BOARD_COORDINATES[j]);
     }
-    printf("\n\n");
 }
 
-const char* get_colour(int adjacent_mines, bool colored) {
+const char* get_colour(int adjacent_mines, bool coloured) {
     static char output[20];
 
     if (adjacent_mines == 0) {
-        return ".";
+        return "\u00B7";
     }
-    if (colored) {
+    if (coloured) {
         if (adjacent_mines == 1) {
             sprintf(output, "\033[34m%d\033[0m", adjacent_mines);
         } else if (adjacent_mines == 2) {

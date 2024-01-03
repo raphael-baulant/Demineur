@@ -9,14 +9,6 @@
 #include "timer.h"
 #include "leaderboard.h"
 
-void clear_screen() {
-    #ifdef _WIN32
-        system("cls"); // Effacer l'écran dans une fenêtre de commande Windows (cmd)
-    #else
-        system("clear"); // Effacer l'écran dans un terminal Linux / UNIX
-    #endif
-}
-
 bool check_win(Board board) {
     return board.unmined_revealed_cells == board.unmined_cells;
 }
@@ -150,13 +142,13 @@ void play_game(Difficulty difficulty) {
     init_board(&board, difficulty);
     Timer timer = init_timer();
     bool first_move = true;
-    bool win;
+    bool win = true;
     bool loss;
 
     // Variables pour stocker le temps de début et de fin
     time_t start, end;
 
-    reminder();
+    /*reminder();
     do {
         printf("\033[32m[Info]\033[0m ");
         show_remaining_mines(board);
@@ -165,7 +157,8 @@ void play_game(Difficulty difficulty) {
             show_timer(timer);
         }
         printf("\n\n");
-        show_board(board, false);
+        show_board(board, false, true);
+        printf("\n\n");
         
         Move move;
         do {
@@ -191,9 +184,10 @@ void play_game(Difficulty difficulty) {
 
     printf("\033[32m[Info]\033[0m ");
     show_timer(timer);
-    printf("\n\n"); 
-    show_board(board, true);
-    
+    printf("\n\n");
+    show_board(board, true, true);
+    printf("\n\n");*/
+
     if (win) {
         show_banner("banners/win.txt");
         char* player_name = select_player_name();
@@ -248,29 +242,50 @@ void archive_game(char *player_name, Difficulty difficulty, Timer timer, Board b
         return;
     }
 
-    // Écrit les données dans le fichier file.txt
-    fprintf(file, "Player : %s\n", player_name);
+    // Rediriger la sortie standard (stdout) vers le fichier
+    fflush(stdout);
+    freopen(full_path, "w", stdout);
 
-    fprintf(file, "Difficulty : ");
+    printf("Player : %s\n", player_name);
+
+    printf("Difficulty : ");
     switch (difficulty) {
         case EASY:
-            fprintf(file, "Easy");
+            printf("Easy");
             break;
         case MEDIUM:
-            fprintf(file, "Medium");
+            printf("Medium");
             break;
         case HARD:
-            fprintf(file, "Hard");
+            printf("Hard");
             break;
         default:
-            fprintf(file, "Easy");
+            printf("Easy");
             break;
     }
-    fprintf(file, " [Height : %d, Mines : %d]\n", board.height, board.mines);
+    printf(" [Height : %d, Mines : %d]\n", board.height, board.mines);
 
-    fprintf(file, "Timer : %02d:%02d\n\n", timer.minutes, timer.seconds);
+    printf("Timer : %02d:%02d\n\n", timer.minutes, timer.seconds);
+
+    show_board(board, true, false);
+    
+    // Restaurer la sortie standard vers la console
+    fflush(stdout);
+    #ifdef _WIN32
+    freopen("CON", "w", stdout);
+    #else
+        freopen("/dev/tty", "w", stdout);
+    #endif
 
     fclose(file);
+}
+
+void clear_screen() {
+    #ifdef _WIN32
+        system("cls"); // Effacer l'écran dans une fenêtre de commande Windows (cmd)
+    #else
+        //system("clear"); // Effacer l'écran dans un terminal Linux / UNIX
+    #endif
 }
 
 const char* get_timestamp() {

@@ -9,8 +9,13 @@
 
 int main() {
     srand((unsigned int)time(NULL));
+    
+    play_game(EASY);
+    show_banner("banners/minesweeper.txt");
+    clear_screen();
+    show_banner("banners/minesweeper.txt");
 
-    while (1) {
+    /*while (1) {
         clear_screen();
         show_banner("banners/minesweeper.txt");
         show_menu();
@@ -40,5 +45,5 @@ int main() {
             default:
                 break;
         }
-    }
+    }*/
 }
