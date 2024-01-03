@@ -251,7 +251,7 @@ void show_board(Board board, bool show_mines, bool coloured) {
             }
             if (cell.state == REVEALED) {
                 if (!show_mines || !cell.is_mine) {
-                    printf("\u2502 %s ", get_colour(cell.adjacent_mines, coloured));
+                    printf("\u2502 %s ", format_adjacent_mines(cell.adjacent_mines, coloured));
                 } else {
                     printf("\u2502 \u25A2 ");
                 }
@@ -276,7 +276,7 @@ void show_board(Board board, bool show_mines, bool coloured) {
     }
 }
 
-const char* get_colour(int adjacent_mines, bool coloured) {
+const char* format_adjacent_mines(int adjacent_mines, bool coloured) {
     static char output[20];
 
     if (adjacent_mines == 0) {
