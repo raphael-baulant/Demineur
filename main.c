@@ -8,16 +8,16 @@
 
 int main() {
     while (1) {
-        system("cls");
+        clear_screen();
         show_banner("banners/minesweeper.txt");
         show_menu();
         int choice = select_menu();
-        system("cls");
+        clear_screen();
         switch (choice) {
             case 1:
                 show_difficulty();
                 Difficulty difficulty = select_difficulty();
-                system("cls");
+                clear_screen();
                 play_game(difficulty);
                 printf("\033[33m[Waiting]\033[0m Press enter to return to the menu...");
                 while (getchar() != '\n');

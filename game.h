@@ -3,8 +3,9 @@
 
 #include "structures.h"
 
+void clear_screen();
 bool check_win(Board board);
-bool check_loss(Board board, Move move);
+bool check_loss(Board board);
 Move select_move();
 bool check_valid_move(Board board, Move move);
 void reminder();

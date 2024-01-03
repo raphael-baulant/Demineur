@@ -138,6 +138,7 @@ void init_board(Board *board, Difficulty difficulty) {
     board->remaining_mines = board->mines;
     board->unmined_cells = board->playable_cells - board->mines;
     board->unmined_revealed_cells = 0;
+    board->loss = false;
 
     alloc_board(board);
     init_cells(board);
@@ -160,6 +161,8 @@ void update_board(Board *board, Move move) {
             if (!board->cells[position.i][position.j].is_mine) {
                 board->unmined_revealed_cells++;
                 reveal_empty_cells(board, position);
+            } else {
+                board->loss = true;
             }
             break;
         default:

@@ -33,6 +33,7 @@ typedef struct {
     int remaining_mines;
     int unmined_cells;
     int unmined_revealed_cells;
+    bool loss;
 } Board;
 
 typedef struct {

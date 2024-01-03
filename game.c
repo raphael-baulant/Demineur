@@ -10,12 +10,20 @@
 #include "timer.h"
 #include "leaderboard.h"
 
+void clear_screen() {
+    #ifdef _WIN32
+        system("cls"); // Effacer l'écran dans une fenêtre de commande Windows (cmd)
+    #else
+        system("clear"); // Effacer l'écran dans un terminal Linux / UNIX
+    #endif
+}
+
 bool check_win(Board board) {
     return board.unmined_revealed_cells == board.unmined_cells;
 }
 
-bool check_loss(Board board, Move move) {
-    return move.action == 'R' && board.cells[move.position.i][move.position.j].is_mine;
+bool check_loss(Board board) {
+    return board.loss;
 }
 
 Move select_move() {
@@ -142,7 +150,7 @@ void play_game(Difficulty difficulty) {
         } while (!check_valid_move(board, move));
         update_board(&board, move);
         win = check_win(board);
-        loss = check_loss(board, move);
+        loss = check_loss(board);
 
         if (first_move) {
             start = time(NULL);
@@ -153,7 +161,7 @@ void play_game(Difficulty difficulty) {
             timer = get_timer(time_elapsed);
         }
 
-        system("cls");
+        clear_screen();
     } while (!win && !loss);
 
     printf("\033[32m[Info]\033[0m ");
