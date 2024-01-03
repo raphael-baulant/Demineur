@@ -196,10 +196,11 @@ void play_game(Difficulty difficulty) {
     
     if (win) {
         show_banner("banners/win.txt");
-        const char* player_name = select_player_name();
+        char* player_name = select_player_name();
         archive_game(player_name, difficulty, timer, board);
         update_leaderboard(player_name, difficulty, timer);
         printf("Congratulations %s, you've earned your place on the leaderboard!\n\n", player_name);
+        free(player_name);
     } else {
         show_banner("banners/lose.txt");
     }
@@ -207,31 +208,43 @@ void play_game(Difficulty difficulty) {
     free_board(&board);
 }
 
-const char* select_player_name() {
-    static char player_name[50];
-    
-    printf("\033[33m[Waiting]\033[0m Please enter your name : ");
-    fgets(player_name, sizeof(player_name), stdin); // Récupère la saisie de l'utilisateur avec les espaces
+char* select_player_name() {
+    char* player_name = (char*)malloc(MAX_NAME_LENGTH * sizeof(char));
+    int valid_input = 0;
 
-    // Supprime le caractère de saut de ligne '\n' à la fin, s'il est présent
-    size_t len = strlen(player_name);
-    if (len > 0 && player_name[len - 1] == '\n') {
-        player_name[len - 1] = '\0';
+    while (!valid_input) {
+        printf("\033[33m[Waiting]\033[0m Please enter your name: ");
+        fgets(player_name, MAX_NAME_LENGTH, stdin); // Récupère la saisie de l'utilisateur avec les espaces
+
+        // Supprime le caractère de saut de ligne '\n' à la fin, s'il est présent
+        size_t len = strlen(player_name);
+        if (len > 0 && player_name[len - 1] == '\n') {
+            player_name[len - 1] = '\0';
+        }
+
+        // Vérifie si la saisie contient au moins un caractère et que le premier caractère est une lettre ou un chiffre
+        if (strlen(player_name) > 0 && (isalpha(player_name[0]) || isdigit(player_name[0]))) {
+            valid_input = 1; // La saisie est valide, sortir de la boucle
+        } else {
+            printf("\033[31m[Error]\033[0m Invalid name.\n");
+        }
     }
 
     return player_name;
 }
 
-void archive_game(const char *player_name, Difficulty difficulty, Timer timer, Board board) {
-    char full_path[50]; // Taille suffisante pour stocker la chaîne complète "archives/YYYY-MM-DD_hh-mm-ss"
-    strcpy(full_path, "archives/"); // Copie la chaîne "archives/" dans full_path
-    strcat(full_path, get_timestamp()); // Concatène le résultat retourné par get_timestamp()
+void archive_game(char *player_name, Difficulty difficulty, Timer timer, Board board) {
+    const int MAX_PATH_LENGTH = 100;
+    char full_path[MAX_PATH_LENGTH];
+    snprintf(full_path, MAX_PATH_LENGTH, "archives/");
     
-    FILE *file;
-    file = fopen(full_path, "w");
-    
+    const char* timestamp = get_timestamp();
+    strncat(full_path, timestamp, MAX_PATH_LENGTH - strlen(full_path) - 1);
+    free((void*)timestamp);
+
+    FILE *file = fopen(full_path, "w");
     if (file == NULL) {
-        printf("Erreur lors de l'ouverture du fichier.\n");
+        printf("Error creating temporary file.\n");
         return;
     }
 
@@ -249,9 +262,9 @@ void archive_game(const char *player_name, Difficulty difficulty, Timer timer, B
         case HARD:
             fprintf(file, "Hard");
             break;
-        // Autres cas de difficulté
         default:
             fprintf(file, "Easy");
+            break;
     }
     fprintf(file, " [Height : %d, Mines : %d]\n", board.height, board.mines);
 
@@ -260,13 +273,13 @@ void archive_game(const char *player_name, Difficulty difficulty, Timer timer, B
     const char* board_string = get_board_string(board, true, false);
     fprintf(file, "%s", board_string);
 
-    fclose(file); // Ferme le fichier après avoir écrit les données
+    fclose(file);
 }
 
 const char* get_timestamp() {
-    static char timestamp[20]; // Tableau de caractères pour stocker la chaîne de date et heure
     time_t rawtime;
     struct tm *timeinfo;
+    char* timestamp = (char*)malloc(20 * sizeof(char));
 
     time(&rawtime);
     timeinfo = localtime(&rawtime);
