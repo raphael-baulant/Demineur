@@ -14,7 +14,7 @@ int main() {
         int choice = select_menu();
         clear_screen();
         switch (choice) {
-            case 1:
+            case MENU_PLAY_GAME:
                 show_difficulty();
                 Difficulty difficulty = select_difficulty();
                 clear_screen();
@@ -22,7 +22,7 @@ int main() {
                 printf("\033[33m[Waiting]\033[0m Press enter to return to the menu...");
                 while (getchar() != '\n');
                 break;
-            case 2:
+            case MENU_LEADERBOARD:
                 show_banner("banners/leaderboard.txt");
                 show_leaderboard(EASY);
                 show_leaderboard(MEDIUM);
@@ -30,7 +30,7 @@ int main() {
                 printf("\033[33m[Waiting]\033[0m Press enter to return to the menu...");
                 while (getchar() != '\n');
                 break;
-            case 3:
+            case MENU_QUIT:
                 show_banner("banners/minesweeper.txt");
                 printf("Hope you enjoyed the game! Goodbye!\n");
                 return 0;

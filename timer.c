@@ -1,10 +1,8 @@
 #include "timer.h"
-
 #include <stdio.h>
 
 Timer init_timer() {
     Timer timer = {0, 0};
-    
     return timer;
 }
 
@@ -13,7 +11,7 @@ Timer get_timer(int seconds) {
 
     if (seconds < 3600) {
         timer.minutes = seconds / 60;
-        timer.seconds = seconds - (timer.minutes * 60);
+        timer.seconds = seconds % 60;
     } else {
         timer.minutes = 59;
         timer.seconds = 59;

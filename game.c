@@ -161,7 +161,7 @@ void play_game(Difficulty difficulty) {
             timer = get_timer(time_elapsed);
         }
 
-        //clear_screen();
+        clear_screen();
     } while (!win && !loss);
 
     printf("\033[32m[Info]\033[0m ");

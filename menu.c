@@ -1,5 +1,4 @@
 #include "menu.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,9 +6,24 @@
 
 void show_menu() {
     printf("MENU\n");
-    printf("[1] Play\n");
-    printf("[2] Leaderboard\n");
-    printf("[3] Exit\n\n");
+    printf("[%d] Play\n", MENU_PLAY_GAME);
+    printf("[%d] Leaderboard\n", MENU_LEADERBOARD);
+    printf("[%d] Exit\n\n", MENU_QUIT);
+}
+
+int is_valid_menu_choice(const char *input) {
+    char *endptr;
+    long num = strtol(input, &endptr, 10);
+
+    if (endptr == input || *endptr != '\0') {
+        return 0; // La chaîne n'est pas un nombre valide
+    }
+
+    if (num < MENU_PLAY_GAME || num > MENU_QUIT) {
+        return 0; // Le nombre est hors de la plage valide
+    }
+
+    return 1; // La saisie est valide
 }
 
 int select_menu() {
@@ -19,31 +33,13 @@ int select_menu() {
     while (1) {
         printf("\033[33m[Waiting]\033[0m Choice : ");
         fgets(input, sizeof(input), stdin);
-
-        // Supprimer le saut de ligne de la fin de la chaîne
         input[strcspn(input, "\n")] = '\0';
 
-        // Vérifier si la saisie contient uniquement des chiffres
-        int valid_input = 1;
-        for (size_t i = 0; i < strlen(input); i++) {
-            if (!isdigit(input[i])) {
-                valid_input = 0;
-                break;
-            }
-        }
-
-        // Convertir la chaîne en nombre si elle ne contient que des chiffres
-        if (valid_input) {
-            choice = atoi(input);
-
-            // Vérifier si le nombre est entre 1 et 3
-            if (choice < 1 || choice > 3) {
-                printf("\033[31m[Error]\033[0m Invalid choice.\n");
-            } else {
-                break;
-            }
-        } else {
+        if (!is_valid_menu_choice(input)) {
             printf("\033[31m[Error]\033[0m Invalid choice.\n");
+        } else {
+            choice = atoi(input);
+            break;
         }
     }
 
