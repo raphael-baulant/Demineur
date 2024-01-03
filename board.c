@@ -198,8 +198,6 @@ void reveal_empty_cells(Board *board, Position position) {
     }
 }
 
-// Garder cette fonction si on se rend compte que stocker le board dans une chaine n'est pas opti
-// L'avantage de le stocker dans une chaine est de pouvoir facilement l'insérer dans les fichiers d'archive
 void show_board(Board board, bool show_mines) {
     printf("   ");
     for (int j = 0; j < board.width; j++) {
@@ -278,95 +276,6 @@ void show_board(Board board, bool show_mines) {
     }
     printf("\n\n");
 }
-
-/*void show_board(Board board, bool show_mines) {
-    char* board_string = get_board_string(board, show_mines, true);
-    printf("%s\n\n", board_string);
-    free(board_string);
-}
-
-char* get_board_string(Board board, bool show_mines, bool colored) {
-    char* output = (char*)malloc(10000 * sizeof(char));
-    output[0] = '\0';
-
-    strcat(output, "   ");
-    for (int j = 0; j < board.width; j++) {
-        sprintf(output + strlen(output), "  %c ", BOARD_COORDINATES[j]);
-    }
-    strcat(output, "\n");
-    
-    for (int i = 0; i < board.height; i++) {
-        strcat(output, "   ");
-        if (i == 0) {
-            for (int j = 0; j < board.width; j++) {
-                if (j == 0) {
-                    strcat(output, "\u250C\u2500\u2500\u2500");
-                } else {
-                    strcat(output, "\u252C\u2500\u2500\u2500");
-                }
-            }
-            strcat(output, "\u2510 \n");
-        } else {
-            for (int j = 0; j < board.width; j++) {
-                if (j == 0) {
-                    strcat(output, "\u251C\u2500\u2500\u2500");
-                } else {
-                    strcat(output, "\u253C\u2500\u2500\u2500");
-                }
-            }
-            strcat(output, "\u2524 \n");
-        }
-        
-        sprintf(output + strlen(output), " %c ", BOARD_COORDINATES[i]);
-        for (int j = 0; j < board.width; j++) {
-            Cell cell = board.cells[i][j];
-            if (cell.state == OUT) {
-                strcat(output, "\u2502 \u2592 ");
-            }
-            if (cell.state == FLAGGED) {
-                if (!show_mines || cell.is_mine) {
-                    strcat(output, "\u2502 \u2691 ");
-                } else {
-                    strcat(output, "\u2502 X ");
-                }
-            }
-            if (cell.state == HIDDEN) {
-                if (cell.is_mine) {
-                    strcat(output, "\u2502 \u25A0 ");
-                } else if (!show_mines || !cell.is_mine) {
-                    strcat(output, "\u2502   ");
-                } else {
-                    strcat(output, "\u2502 \u25A0 ");
-                }
-            }
-            if (cell.state == REVEALED) {
-                if (!show_mines || !cell.is_mine) {
-                    sprintf(output + strlen(output), "\u2502 %s ", get_colour(cell.adjacent_mines, colored));
-                } else {
-                    strcat(output, "\u2502 \u25A2 ");
-                }
-            }
-        }
-        sprintf(output + strlen(output), "\u2502 %c \n", BOARD_COORDINATES[i]);
-    }
-
-    strcat(output, "   ");
-    for (int j = 0; j < board.width; j++) {
-        if (j == 0) {
-            strcat(output, "\u2514\u2500\u2500\u2500");
-        } else {
-            strcat(output, "\u2534\u2500\u2500\u2500");
-        }
-    }
-    strcat(output, "\u2518 \n");
-    
-    strcat(output, "   ");
-    for (int j = 0; j < board.width; j++) {
-        sprintf(output + strlen(output), "  %c ", BOARD_COORDINATES[j]);
-    }
-
-    return output;
-}*/
 
 const char* get_colour(int adjacent_mines, bool colored) {
     static char output[20];

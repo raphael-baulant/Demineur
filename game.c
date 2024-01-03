@@ -270,10 +270,6 @@ void archive_game(char *player_name, Difficulty difficulty, Timer timer, Board b
 
     fprintf(file, "Timer : %02d:%02d\n\n", timer.minutes, timer.seconds);
 
-    /*char* board_string = get_board_string(board, true, false);
-    fprintf(file, "%s", board_string);
-    free(board_string);*/
-
     fclose(file);
 }
 
