@@ -7,6 +7,7 @@ void clear_screen();
 bool check_win(Board board);
 bool check_loss(Board board);
 Move select_move();
+int get_coordinate(char input);
 bool check_valid_move(Board board, Move move);
 void reminder();
 void show_remaining_mines(Board board);

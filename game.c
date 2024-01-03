@@ -1,5 +1,4 @@
 #include "game.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,8 +31,6 @@ Move select_move() {
     while (1) {
         printf("\033[33m[Waiting]\033[0m Move : ");
         fgets(input, sizeof(input), stdin);
-
-        // Supprimer le saut de ligne de la fin de la chaîne
         input[strcspn(input, "\n")] = '\0';
 
         // Vérifier si la saisie contient uniquement des chiffres ou des lettres
@@ -47,7 +44,8 @@ Move select_move() {
 
         // Vérifier si le troisième caractère est 'R', 'S' ou 'U'
         if (valid_input) {
-            if (toupper(input[2]) != 'R' && toupper(input[2]) != 'S' && toupper(input[2]) != 'U') {
+            char action = toupper(input[2]);
+            if (action != 'R' && action != 'S' && action != 'U') {
                 printf("\033[31m[Error]\033[0m Invalid move.\n");
             } else {
                 break;
@@ -59,6 +57,8 @@ Move select_move() {
 
     Move move;
     move.action = toupper(input[2]);
+
+
     for (int i = 0; i < 36; i++) {
         if (BOARD_COORDINATES[i] == toupper(input[0])) {
             move.position.i = i;
@@ -71,41 +71,64 @@ Move select_move() {
             break;
         }
     }
+
+    // Récupérer les coordonnées à partir des entrées de l'utilisateur
+    move.position.i = get_coordinate(input[0]);
+    move.position.j = get_coordinate(input[1]);
     
     return move;
 }
 
+int get_coordinate(char input) {
+    for (int i = 0; i < BOARD_COORDINATES_LENGTH; i++) {
+        if (toupper(input) == BOARD_COORDINATES[i]) {
+            return i;
+        }
+    }
+
+    // Valeur par défaut si l'entrée n'est pas valide
+    return 0;
+}
+
 bool check_valid_move(Board board, Move move) {
     Position position = move.position;
+
     if (position.i < 0 || position.j < 0 || position.i >= board.height || position.j >= board.width) {
         printf("\033[31m[Error]\033[0m Position outside the board.\n");
         return false;
     }
+    
     State state = board.cells[position.i][position.j].state;
+    
     if (state == OUT) {
         printf("\033[31m[Error]\033[0m Position outside the X.\n");
         return false;
     }
+
     if (state == REVEALED) {
         printf("\033[31m[Error]\033[0m Position already revealed.\n");
         return false;
     } 
+    
     if (state == FLAGGED) {
         if (move.action == 'S') {
             printf("\033[31m[Error]\033[0m Position already flagged.\n");
             return false;
         }
+        
         if (move.action == 'R') {
             printf("\033[31m[Error]\033[0m Impossible to reveal a flagged position.\n");
             return false;
         }
     }
+    
     if (state == HIDDEN) {
         if (move.action == 'U') {
             printf("\033[31m[Error]\033[0m Position already unflagged.\n");
             return false;
         }
     }
+    
     return true;
 }
 
@@ -123,18 +146,17 @@ void show_remaining_mines(Board board) {
 }
 
 void play_game(Difficulty difficulty) {
-    bool win;
-    bool loss;
     Board board;
     init_board(&board, difficulty);
-    reminder();
+    Timer timer = init_timer();
+    bool first_move = true;
+    bool win;
+    bool loss;
 
     // Variables pour stocker le temps de début et de fin
     time_t start, end;
-    bool first_move = true;
 
-    Timer timer = init_timer();
-
+    reminder();
     do {
         printf("\033[32m[Info]\033[0m ");
         show_remaining_mines(board);
@@ -144,11 +166,14 @@ void play_game(Difficulty difficulty) {
         }
         printf("\n\n");
         show_board(board, false);
+        
         Move move;
         do {
             move = select_move();
         } while (!check_valid_move(board, move));
+        
         update_board(&board, move);
+        
         win = check_win(board);
         loss = check_loss(board);
 
@@ -166,7 +191,7 @@ void play_game(Difficulty difficulty) {
 
     printf("\033[32m[Info]\033[0m ");
     show_timer(timer);
-    printf("\n\n");
+    printf("\n\n"); 
     show_board(board, true);
     
     if (win) {
@@ -175,10 +200,10 @@ void play_game(Difficulty difficulty) {
         archive_game(player_name, difficulty, timer, board);
         update_leaderboard(player_name, difficulty, timer);
         printf("Congratulations %s, you've earned your place on the leaderboard!\n\n", player_name);
-    }
-    if (loss) {
+    } else {
         show_banner("banners/lose.txt");
     }
+    
     free_board(&board);
 }
 

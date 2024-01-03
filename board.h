@@ -3,6 +3,7 @@
 
 #include "structures.h"
 
+#define BOARD_COORDINATES_LENGTH 36
 extern const char BOARD_COORDINATES[];
 
 void alloc_board(Board *board);
