@@ -4,7 +4,7 @@
 #include "structures.h"
 
 /*
- * Initialise un timer à 00:00.
+ * Initialise un timer à 00:00 (0 minute et 0 seconde).
  * Renvoie : un Timer initialisé.
  */
 Timer init_timer();

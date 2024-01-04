@@ -10,7 +10,7 @@
 void play_game(Difficulty difficulty);
 
 /*
- * Affiche un rappel des commandes pour le jeu.
+ * Affiche un rappel des coups possibles pour le jeu.
  */
 void reminder();
 
@@ -21,8 +21,8 @@ void reminder();
 void show_remaining_mines(Board board);
 
 /*
- * Sélectionne et retourne un mouvement saisi par le joueur.
- * Renvoie : le mouvement sélectionné par le joueur.
+ * Sélectionne et retourne un coup saisi par le joueur.
+ * Renvoie : le coup sélectionné par le joueur.
  */
 Move select_move();
 
@@ -34,10 +34,10 @@ Move select_move();
 int get_coordinate(char input);
 
 /*
- * Vérifie si le mouvement sélectionné par le joueur est valide.
+ * Vérifie si le coup sélectionné par le joueur est valide.
  * Paramètres : board - la structure du plateau de jeu.
- *              move - le mouvement effectué par le joueur.
- * Renvoie : true si le mouvement est valide, sinon false.
+ *              move - le coup effectué par le joueur.
+ * Renvoie : true si le coup est valide, sinon false.
  */
 bool check_valid_move(Board board, Move move);
 
@@ -72,7 +72,7 @@ void archive_game(char *player_name, Difficulty difficulty, Timer timer, Board b
 
 /*
  * Obtient un timestamp pour l'archivage de la partie.
- * Renvoie : le timestamp au format chaîne de caractères.
+ * Renvoie : le timestamp au format AAAA-MM-JJ_HH-MM-SS.
  */
 const char* get_timestamp();
 

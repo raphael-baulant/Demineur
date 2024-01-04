@@ -5,6 +5,7 @@
 
 const char* get_file_path(Difficulty difficulty) {
     switch (difficulty) {
+        // Selon la difficulté, retourne le chemin d'accès au fichier correspondant
         case EASY:
             return "leaderboard/easy.txt";
         case MEDIUM:
@@ -17,15 +18,17 @@ const char* get_file_path(Difficulty difficulty) {
 }
 
 void update_leaderboard(char *player_name, Difficulty difficulty, Timer timer) {
-    // Ouvrir le fichier en mode lecture
+    // Obtient le chemin d'accès au fichier de classement pour la difficulté spécifiée
     const char *file_path = get_file_path(difficulty);
+    
+    // Ouvre le fichier de classement en mode lecture
     FILE *file = fopen(file_path, "r");
     if (file == NULL) {
         printf("Error opening file.\n");
         return;
     }
 
-    // Créer un fichier temporaire pour stocker les modifications
+    // Crée un fichier temporaire pour stocker les modifications
     FILE *temp_file = fopen("temp.txt", "w");
     if (temp_file == NULL) {
         printf("Error creating temporary file.\n");
@@ -37,19 +40,18 @@ void update_leaderboard(char *player_name, Difficulty difficulty, Timer timer) {
     char new_line[MAX_LINE_LENGTH];
     snprintf(new_line, sizeof(new_line), "%02d:%02d %s", timer.minutes, timer.seconds, player_name);
 
-    // Vérifier si le fichier est vide
+    // Vérifie si le fichier est vide
     bool file_empty = true;
-    if (fgets(line, sizeof(line), file) == NULL) {
-        file_empty = true;
-    } else {
+    if (fgets(line, sizeof(line), file) != NULL) {
         file_empty = false;
-        rewind(file); // Retourner au début du fichier pour commencer la lecture
+        rewind(file); // Retourne au début du fichier pour commencer la lecture
     }
 
-    // Lire et modifier le contenu du fichier ligne par ligne
+    // Lit et modifie le contenu du fichier ligne par ligne
     bool line_inserted = false;
     while (fgets(line, sizeof(line), file) != NULL) {
         if (!line_inserted && strncmp(new_line, line, 5) < 0) {
+            // Insère la nouvelle ligne au bon endroit dans le fichier temporaire
             fputs(new_line, temp_file);
             fputs("\n", temp_file);
             fputs(line, temp_file);
@@ -67,18 +69,20 @@ void update_leaderboard(char *player_name, Difficulty difficulty, Timer timer) {
         fputs(new_line, temp_file);
     }
 
-    // Fermer les fichiers
+    // Ferme les fichiers
     fclose(file);
     fclose(temp_file);
 
-    // Supprimer l'ancien fichier et renommer le fichier temporaire
+    // Supprime l'ancien fichier et renomme le fichier temporaire
     remove(file_path);
     rename("temp.txt", file_path);
 }
 
 void show_leaderboard(Difficulty difficulty) {
-    // Ouvrir le fichier en mode lecture
+    // Obtient le chemin d'accès au fichier de classement pour la difficulté spécifiée
     const char *file_path = get_file_path(difficulty);
+
+    // Ouvre le fichier de classement en mode lecture
     FILE *file = fopen(file_path, "r");
     if (file == NULL) {
         printf("Error opening file.\n");
@@ -87,18 +91,17 @@ void show_leaderboard(Difficulty difficulty) {
 
     char line[MAX_LINE_LENGTH];
 
-    // Vérifier si le fichier est vide
+    // Vérifie si le fichier est vide
     bool file_empty = true;
-    if (fgets(line, sizeof(line), file) == NULL) {
-        file_empty = true;
-    } else {
+    if (fgets(line, sizeof(line), file) != NULL) {
         file_empty = false;
-        rewind(file); // Retourner au début du fichier pour commencer la lecture
+        rewind(file); // Retourne au début du fichier pour commencer la lecture
     }
     if (file_empty) {
         return;
     }
 
+    // Affiche le titre du classement en fonction de la difficulté
     switch (difficulty) {
         case EASY:
             printf("EASY\n");
@@ -114,7 +117,8 @@ void show_leaderboard(Difficulty difficulty) {
             break;
     }
     
-    int max_name_length = 0; // Initialisation de la longueur maximale du nom du joueur à 0
+    int max_name_length = 0; // Longueur maximale du nom du joueur initialisée à 0
+    // Calcule la longueur maximale du nom du joueur dans le fichier de classement
     while (fgets(line, sizeof(line), file) != NULL) {
         char timer[6]; // Suppose une longueur maximale de 5 pour le chronomètre (plus 1 pour le caractère nul)
         char player_name[MAX_NAME_LENGTH + 1]; // Pour stocker le nom du joueur
@@ -129,15 +133,18 @@ void show_leaderboard(Difficulty difficulty) {
         }
     }
 
+    // Ajuste la longueur maximale du nom du joueur pour tenir compte du titre "Player" et de la marge
     max_name_length = (int)strlen("Player") > max_name_length ? (int)strlen("Player") : max_name_length;
     max_name_length = max_name_length + 5;
+
+    // Affiche le titre du classement avec une mise en forme alignée
     printf("%-10s %-*s %-10s\n", "Rank", max_name_length, "Player", "Timer");
 
     // Retourner au début du fichier pour afficher le scoreboard
     rewind(file);
 
-    // Lire et afficher le contenu du fichier ligne par ligne
-    int ranking = 1;
+    int ranking = 1; // Rang du classement initialisé à 1
+    // Lit et affiche le contenu du fichier ligne par ligne
     while (fgets(line, sizeof(line), file) != NULL) {
         char timer[6]; // Suppose une longueur maximale de 5 pour le chronomètre (plus 1 pour le caractère nul)
         char player_name[MAX_NAME_LENGTH + 1]; // Pour stocker le nom du joueur
@@ -151,6 +158,6 @@ void show_leaderboard(Difficulty difficulty) {
     }
     printf("\n");
 
-    // Fermer le fichier
+    // Ferme le fichier
     fclose(file);
 }
