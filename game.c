@@ -137,7 +137,7 @@ Move select_move() {
             if (action != 'R' && action != 'S' && action != 'U') {
                 printf("\033[31m[Error]\033[0m Invalid move.\n");
             } else {
-                break; // Sort de la boucle si le mouvement est valide
+                break; // Sort de la boucle si le coup est valide
             }
         } else {
             printf("\033[31m[Error]\033[0m Invalid move.\n");

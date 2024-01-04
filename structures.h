@@ -46,7 +46,7 @@ typedef struct {
     Position positions[8];
 } Neighbours;
 
-// Structure représentant un mouvement du joueur
+// Structure représentant un coup du joueur
 typedef struct {
     Position position;
     char action;

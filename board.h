@@ -41,7 +41,7 @@ void place_mines(Board *board);
 /*
  * Met à jour l'état du plateau de jeu en fonction du coup joué.
  * Paramètres : board - pointeur vers la structure du plateau à mettre à jour.
- *              move - le mouvement effectué par le joueur.
+ *              move - le coup effectué par le joueur.
  */
 void update_board(Board *board, Move move);
 
