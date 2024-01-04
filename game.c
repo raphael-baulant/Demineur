@@ -9,12 +9,82 @@
 #include "timer.h"
 #include "leaderboard.h"
 
-bool check_win(Board board) {
-    return board.unmined_revealed_cells == board.unmined_cells;
+void play_game(Difficulty difficulty) {
+    Board board;
+    init_board(&board, difficulty);
+    Timer timer = init_timer();
+    bool first_move = true;
+    bool win = true;
+    bool loss;
+
+    // Variables pour stocker le temps de début et de fin
+    time_t start, end;
+
+    reminder();
+    do {
+        printf("\033[32m[Info]\033[0m ");
+        show_remaining_mines(board);
+        if (!first_move) {
+            printf("    ");
+            show_timer(timer);
+        }
+        printf("\n\n");
+        show_board(board, false, true);
+        printf("\n\n");
+        
+        Move move;
+        do {
+            move = select_move();
+        } while (!check_valid_move(board, move));
+        
+        update_board(&board, move);
+        
+        win = check_win(board);
+        loss = check_loss(board);
+
+        if (first_move) {
+            start = time(NULL);
+            first_move = false;
+        } else {
+            end = time(NULL);
+            int time_elapsed = (int)difftime(end, start);
+            timer = get_timer(time_elapsed);
+        }
+
+        system("clear");
+    } while (!win && !loss);
+
+    printf("\033[32m[Info]\033[0m ");
+    show_timer(timer);
+    printf("\n\n");
+    show_board(board, true, true);
+    printf("\n\n");
+
+    if (win) {
+        show_banner("banners/win.txt");
+        char* player_name = select_player_name();
+        archive_game(player_name, difficulty, timer, board);
+        update_leaderboard(player_name, difficulty, timer);
+        printf("Congratulations %s, you've earned your place on the leaderboard!\n\n", player_name);
+        free(player_name);
+    } else {
+        show_banner("banners/lose.txt");
+    }
+    
+    free_board(&board);
 }
 
-bool check_loss(Board board) {
-    return board.loss;
+void reminder() {
+    printf("\033[34m[Reminder]\033[0m\n");
+    printf("The move 17R means you want to (R)eveal cell [raw=1, column=7].\n");
+    printf("The move 17S means you want to (S)et a flag in cell [raw=1, column=7].\n");
+    printf("The move 17U means you want to (U)nset the flag in cell [raw=1, column=7].\n");
+    printf("Case is not important (upper or lower case).\n");
+    printf("Timer will start after your first move.\n\n");
+}
+
+void show_remaining_mines(Board board) {
+    printf("Remaining mines : %d", board.remaining_mines);
 }
 
 Move select_move() {
@@ -26,10 +96,10 @@ Move select_move() {
         input[strcspn(input, "\n")] = '\0';
 
         // Vérifier si la saisie contient uniquement des chiffres ou des lettres
-        int valid_input = 1;
+        bool valid_input = true;
         for (size_t i = 0; i < strlen(input); i++) {
             if (!isalnum(input[i])) {
-                valid_input = 0;
+                valid_input = false;
                 break;
             }
         }
@@ -49,7 +119,6 @@ Move select_move() {
 
     Move move;
     move.action = toupper(input[2]);
-
 
     for (int i = 0; i < 36; i++) {
         if (BOARD_COORDINATES[i] == toupper(input[0])) {
@@ -124,87 +193,17 @@ bool check_valid_move(Board board, Move move) {
     return true;
 }
 
-void reminder() {
-    printf("\033[34m[Reminder]\033[0m\n");
-    printf("The move 17R means you want to (R)eveal cell [raw=1, column=7].\n");
-    printf("The move 17S means you want to (S)et a flag in cell [raw=1, column=7].\n");
-    printf("The move 17U means you want to (U)nset the flag in cell [raw=1, column=7].\n");
-    printf("Case is not important (upper or lower case).\n");
-    printf("Timer will start after your first move.\n\n");
+bool check_win(Board board) {
+    return board.unmined_revealed_cells == board.unmined_cells;
 }
 
-void show_remaining_mines(Board board) {
-    printf("Remaining mines : %d", board.remaining_mines);
-}
-
-void play_game(Difficulty difficulty) {
-    Board board;
-    init_board(&board, difficulty);
-    Timer timer = init_timer();
-    bool first_move = true;
-    bool win = true;
-    bool loss;
-
-    // Variables pour stocker le temps de début et de fin
-    time_t start, end;
-
-    reminder();
-    do {
-        printf("\033[32m[Info]\033[0m ");
-        show_remaining_mines(board);
-        if (!first_move) {
-            printf("    ");
-            show_timer(timer);
-        }
-        printf("\n\n");
-        show_board(board, false, true);
-        printf("\n\n");
-        
-        Move move;
-        do {
-            move = select_move();
-        } while (!check_valid_move(board, move));
-        
-        update_board(&board, move);
-        
-        win = check_win(board);
-        loss = check_loss(board);
-
-        if (first_move) {
-            start = time(NULL);
-            first_move = false;
-        } else {
-            end = time(NULL);
-            int time_elapsed = (int)difftime(end, start);
-            timer = get_timer(time_elapsed);
-        }
-
-        system("clear");
-    } while (!win && !loss);
-
-    printf("\033[32m[Info]\033[0m ");
-    show_timer(timer);
-    printf("\n\n");
-    show_board(board, true, true);
-    printf("\n\n");
-
-    if (win) {
-        show_banner("banners/win.txt");
-        char* player_name = select_player_name();
-        archive_game(player_name, difficulty, timer, board);
-        update_leaderboard(player_name, difficulty, timer);
-        printf("Congratulations %s, you've earned your place on the leaderboard!\n\n", player_name);
-        free(player_name);
-    } else {
-        show_banner("banners/lose.txt");
-    }
-    
-    free_board(&board);
+bool check_loss(Board board) {
+    return board.loss;
 }
 
 char* select_player_name() {
     char* player_name = (char*)malloc(MAX_NAME_LENGTH * sizeof(char));
-    int valid_input = 0;
+    bool valid_input = false;
 
     while (!valid_input) {
         printf("\033[33m[Waiting]\033[0m Please enter your name: ");
@@ -218,7 +217,7 @@ char* select_player_name() {
 
         // Vérifie si la saisie contient au moins un caractère et que le premier caractère est une lettre ou un chiffre
         if (strlen(player_name) > 0 && (isalpha(player_name[0]) || isdigit(player_name[0]))) {
-            valid_input = 1; // La saisie est valide, sortir de la boucle
+            valid_input = true; // La saisie est valide, sortir de la boucle
         } else {
             printf("\033[31m[Error]\033[0m Invalid name.\n");
         }

@@ -11,21 +11,6 @@ void show_difficulty() {
     printf("[%d] Hard\n\n", DIFFICULTY_HARD);
 }
 
-int is_valid_difficulty_choice(const char *input) {
-    char *endptr;
-    long num = strtol(input, &endptr, 10);
-
-    if (endptr == input || *endptr != '\0') {
-        return 0; // La chaîne n'est pas un nombre valide
-    }
-
-    if (num < DIFFICULTY_EASY || num > DIFFICULTY_HARD) {
-        return 0; // Le nombre est hors de la plage valide
-    }
-
-    return 1; // La saisie est valide
-}
-
 Difficulty select_difficulty() {
     char input[100];
     int choice;
@@ -53,4 +38,19 @@ Difficulty select_difficulty() {
         default:
             return EASY;
     }
+}
+
+bool is_valid_difficulty_choice(const char *input) {
+    char *endptr;
+    long num = strtol(input, &endptr, 10);
+
+    if (endptr == input || *endptr != '\0') {
+        return false; // La chaîne n'est pas un nombre valide
+    }
+
+    if (num < DIFFICULTY_EASY || num > DIFFICULTY_HARD) {
+        return false; // Le nombre est hors de la plage valide
+    }
+
+    return true; // La saisie est valide
 }

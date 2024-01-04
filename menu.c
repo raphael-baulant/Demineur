@@ -11,21 +11,6 @@ void show_menu() {
     printf("[%d] Exit\n\n", MENU_QUIT);
 }
 
-int is_valid_menu_choice(const char *input) {
-    char *endptr;
-    long num = strtol(input, &endptr, 10);
-
-    if (endptr == input || *endptr != '\0') {
-        return 0; // La chaîne n'est pas un nombre valide
-    }
-
-    if (num < MENU_PLAY_GAME || num > MENU_QUIT) {
-        return 0; // Le nombre est hors de la plage valide
-    }
-
-    return 1; // La saisie est valide
-}
-
 int select_menu() {
     char input[100];
     int choice;
@@ -44,4 +29,19 @@ int select_menu() {
     }
 
     return choice;
+}
+
+bool is_valid_menu_choice(const char *input) {
+    char *endptr;
+    long num = strtol(input, &endptr, 10);
+
+    if (endptr == input || *endptr != '\0') {
+        return false; // La chaîne n'est pas un nombre valide
+    }
+
+    if (num < MENU_PLAY_GAME || num > MENU_QUIT) {
+        return false; // Le nombre est hors de la plage valide
+    }
+
+    return true; // La saisie est valide
 }

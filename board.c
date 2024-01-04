@@ -18,6 +18,43 @@ const char BOARD_COORDINATES[] = {
 #define MEDIUM_MINES_PROBA 0.15
 #define HARD_MINES_PROBA 0.2
 
+void init_board(Board *board, Difficulty difficulty) {
+    switch (difficulty) {
+        case EASY:
+            board->height = EASY_HEIGHT;
+            board->mines_proba = EASY_MINES_PROBA;
+            break;
+        case MEDIUM:
+            board->height = MEDIUM_HEIGHT;
+            board->mines_proba = MEDIUM_MINES_PROBA;
+            break;
+        case HARD:
+            board->height = HARD_HEIGHT;
+            board->mines_proba = HARD_MINES_PROBA;
+            break;
+        default:
+            board->height = EASY_HEIGHT;
+            board->mines_proba = EASY_MINES_PROBA;
+            break;
+    }
+    if (board->height % 2) {
+        board->x_bar_width = board->height - 1;
+    } else {
+        board->x_bar_width = board->height - 2;
+    }
+    board->width = 3 * board->x_bar_width;
+    board->playable_cells = 2 * board->x_bar_width * board->height;
+    board->mines = (int)(board->mines_proba * board->playable_cells + 0.5);
+    board->remaining_mines = board->mines;
+    board->unmined_cells = board->playable_cells - board->mines;
+    board->unmined_revealed_cells = 0;
+    board->loss = false;
+
+    alloc_board(board);
+    init_cells(board);
+    place_mines(board);
+}
+
 void alloc_board(Board *board) {
     board->cells = (Cell**)malloc(board->height * sizeof(Cell*));
     for (int i = 0; i < board->height; i++) {
@@ -61,6 +98,82 @@ void init_cells(Board *board) {
     }
 }
 
+void place_mines(Board *board) {
+    int count = 0;
+    while (count < board->mines) {
+        int random = rand() % board->playable_cells;
+        Position position = board->playable_cells_positions[random];
+        if (!board->cells[position.i][position.j].is_mine) {
+            board->cells[position.i][position.j].is_mine = true;
+            count++;
+            // Gestion des mines adjacentes
+            Neighbours neighbours = get_neighbours(*board, position);
+            for (int k = 0; k < neighbours.number; k++) {
+                board->cells[neighbours.positions[k].i][neighbours.positions[k].j].adjacent_mines++;
+            }
+        }
+    }
+}
+
+void update_board(Board *board, Move move) {
+    Position position = move.position;
+    switch (move.action) {
+        case 'S':
+            board->cells[position.i][position.j].state = FLAGGED;
+            board->remaining_mines--;
+            break;
+        case 'U':
+            board->cells[position.i][position.j].state = HIDDEN;
+            board->remaining_mines++;
+            break;
+        case 'R':
+            board->cells[position.i][position.j].state = REVEALED;
+            if (!board->cells[position.i][position.j].is_mine) {
+                board->unmined_revealed_cells++;
+                reveal_neighbouring_cells_recursively(board, position);
+            } else {
+                board->loss = true;
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+void reveal_neighbouring_cells_recursively(Board *board, Position position) {
+    Neighbours neighbours = get_neighbours(*board, position);
+    int adjacent_mines = board->cells[position.i][position.j].adjacent_mines;
+    if (adjacent_mines == 0) {
+        for (int k = 0; k < neighbours.number; k++) {
+            if (board->cells[neighbours.positions[k].i][neighbours.positions[k].j].state == HIDDEN) {
+                board->cells[neighbours.positions[k].i][neighbours.positions[k].j].state = REVEALED;
+                board->unmined_revealed_cells++;
+                reveal_neighbouring_cells_recursively(board, neighbours.positions[k]);
+            }
+        }
+    } else {
+        int flagged_neighbours = 0;
+        for (int k = 0; k < neighbours.number; k++) {
+            if (board->cells[neighbours.positions[k].i][neighbours.positions[k].j].state == FLAGGED) {
+                flagged_neighbours++;
+            }
+        }
+        if (flagged_neighbours == adjacent_mines) {
+            for (int k = 0; k < neighbours.number; k++) {
+                if (board->cells[neighbours.positions[k].i][neighbours.positions[k].j].state == HIDDEN) {
+                    board->cells[neighbours.positions[k].i][neighbours.positions[k].j].state = REVEALED;
+                    if (!board->cells[neighbours.positions[k].i][neighbours.positions[k].j].is_mine) {
+                        board->unmined_revealed_cells++;
+                        reveal_neighbouring_cells_recursively(board, neighbours.positions[k]);
+                    } else {
+                        board->loss = true;
+                    }
+                }
+            }
+        }
+    }
+}
+
 Neighbours get_neighbours(Board board, Position position) {
     Neighbours neighbours;
     neighbours.number = 0;
@@ -83,119 +196,6 @@ Neighbours get_neighbours(Board board, Position position) {
     }
     
     return neighbours;
-}
-
-void place_mines(Board *board) {
-    int count = 0;
-    while (count < board->mines) {
-        int random = rand() % board->playable_cells;
-        Position position = board->playable_cells_positions[random];
-        if (!board->cells[position.i][position.j].is_mine) {
-            board->cells[position.i][position.j].is_mine = true;
-            count++;
-            // Gestion des mines adjacentes
-            Neighbours neighbours = get_neighbours(*board, position);
-            for (int k = 0; k < neighbours.number; k++) {
-                board->cells[neighbours.positions[k].i][neighbours.positions[k].j].adjacent_mines++;
-            }
-        }
-    }
-}
-
-void init_board(Board *board, Difficulty difficulty) {
-    switch (difficulty) {
-        case EASY:
-            board->height = EASY_HEIGHT;
-            board->mines_proba = EASY_MINES_PROBA;
-            break;
-        case MEDIUM:
-            board->height = MEDIUM_HEIGHT;
-            board->mines_proba = MEDIUM_MINES_PROBA;
-            break;
-        case HARD:
-            board->height = HARD_HEIGHT;
-            board->mines_proba = HARD_MINES_PROBA;
-            break;
-        default:
-            board->height = EASY_HEIGHT;
-            board->mines_proba = EASY_MINES_PROBA;
-            break;
-    }
-    if (board->height % 2) {
-        board->x_bar_width = board->height - 1;
-    } else {
-        board->x_bar_width = board->height - 2;
-    }
-    board->width = 3 * board->x_bar_width;
-    board->playable_cells = 2 * board->x_bar_width * board->height;
-    board->mines = (int)(board->mines_proba * board->playable_cells + 0.5);
-    board->remaining_mines = board->mines;
-    board->unmined_cells = board->playable_cells - board->mines;
-    board->unmined_revealed_cells = 0;
-    board->loss = false;
-
-    alloc_board(board);
-    init_cells(board);
-    place_mines(board);
-}
-
-void update_board(Board *board, Move move) {
-    Position position = move.position;
-    switch (move.action) {
-        case 'S':
-            board->cells[position.i][position.j].state = FLAGGED;
-            board->remaining_mines--;
-            break;
-        case 'U':
-            board->cells[position.i][position.j].state = HIDDEN;
-            board->remaining_mines++;
-            break;
-        case 'R':
-            board->cells[position.i][position.j].state = REVEALED;
-            if (!board->cells[position.i][position.j].is_mine) {
-                board->unmined_revealed_cells++;
-                reveal_empty_cells(board, position);
-            } else {
-                board->loss = true;
-            }
-            break;
-        default:
-            break;
-    }
-}
-
-void reveal_empty_cells(Board *board, Position position) {
-    Neighbours neighbours = get_neighbours(*board, position);
-    int adjacent_mines = board->cells[position.i][position.j].adjacent_mines;
-    if (adjacent_mines == 0) {
-        for (int k = 0; k < neighbours.number; k++) {
-            if (board->cells[neighbours.positions[k].i][neighbours.positions[k].j].state == HIDDEN) {
-                board->cells[neighbours.positions[k].i][neighbours.positions[k].j].state = REVEALED;
-                board->unmined_revealed_cells++;
-                reveal_empty_cells(board, neighbours.positions[k]);
-            }
-        }
-    } else {
-        int flagged_neighbours = 0;
-        for (int k = 0; k < neighbours.number; k++) {
-            if (board->cells[neighbours.positions[k].i][neighbours.positions[k].j].state == FLAGGED) {
-                flagged_neighbours++;
-            }
-        }
-        if (flagged_neighbours == adjacent_mines) {
-            for (int k = 0; k < neighbours.number; k++) {
-                if (board->cells[neighbours.positions[k].i][neighbours.positions[k].j].state == HIDDEN) {
-                    board->cells[neighbours.positions[k].i][neighbours.positions[k].j].state = REVEALED;
-                    if (!board->cells[neighbours.positions[k].i][neighbours.positions[k].j].is_mine) {
-                        board->unmined_revealed_cells++;
-                        reveal_empty_cells(board, neighbours.positions[k]);
-                    } else {
-                        board->loss = true;
-                    }
-                }
-            }
-        }
-    }
 }
 
 void show_board(Board board, bool show_mines, bool coloured) {
