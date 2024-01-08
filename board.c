@@ -280,9 +280,7 @@ void show_board(Board board, bool show_mines, bool coloured) {
                 }
             }
             if (cell.state == HIDDEN) {
-                if (cell.is_mine) {
-                    printf("\u2502 \u25A0 ");
-                } else if (!show_mines || !cell.is_mine) {
+                if (!show_mines || !cell.is_mine) {
                     printf("\u2502   ");
                 } else {
                     printf("\u2502 \u25A0 ");
